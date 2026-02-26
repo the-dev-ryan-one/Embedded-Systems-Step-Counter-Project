@@ -57,10 +57,34 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SW1_Pin GPIO_PIN_11
+#define SW1_GPIO_Port GPIOC
+#define RGB_DS4_Pin GPIO_PIN_12
+#define RGB_DS4_GPIO_Port GPIOC
+#define SW4_Pin GPIO_PIN_13
+#define SW4_GPIO_Port GPIOC
+#define RGB_DS1_Pin GPIO_PIN_3
+#define RGB_DS1_GPIO_Port GPIOF
+#define SW2_Pin GPIO_PIN_1
+#define SW2_GPIO_Port GPIOC
+#define RGB_DS2_Pin GPIO_PIN_2
+#define RGB_DS2_GPIO_Port GPIOC
 #define LD1_Pin GPIO_PIN_5
 #define LD1_GPIO_Port GPIOA
+#define JOYSTICK_CLICK_Pin GPIO_PIN_1
+#define JOYSTICK_CLICK_GPIO_Port GPIOB
+#define RGB_DS3_Pin GPIO_PIN_6
+#define RGB_DS3_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_9
 #define LD2_GPIO_Port GPIOC
+#define RGB_GREEN_Pin GPIO_PIN_2
+#define RGB_GREEN_GPIO_Port GPIOD
+#define RGB_RED_Pin GPIO_PIN_3
+#define RGB_RED_GPIO_Port GPIOD
+#define RGB_BLUE_Pin GPIO_PIN_4
+#define RGB_BLUE_GPIO_Port GPIOD
+#define SW3_Pin GPIO_PIN_10
+#define SW3_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 
