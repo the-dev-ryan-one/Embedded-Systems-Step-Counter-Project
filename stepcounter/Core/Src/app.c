@@ -8,12 +8,16 @@
 
 #define BLINKY_FREQUENCY_HZ 2
 #define BUTTON_FREQUENCY_HZ 56
+#define JOYSTICK_FREQUENCY_HZ 56
 
 #define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
+#define JOYSTICK_PERIOD_TICKS (TICK_FREQUENCY_HZ/JOYSTICK_FREQUENCY_HZ)
+
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
+static uint32_t JoystickNextRun = 0;
 
 static uint16_t raw_adc[2];
 
@@ -25,6 +29,7 @@ void app_main(void) {
 
 	BlinkyNextRun = HAL_GetTick() + BLINKY_PERIOD_TICKS;
 	ButtonNextRun = HAL_GetTick() + BUTTON_PERIOD_TICKS;
+	JoystickNextRun = HAL_GetTick() + JOYSTICK_PERIOD_TICKS;
 
 	buttons_init();
 
@@ -42,9 +47,21 @@ void app_main(void) {
     	  {
     		buttons_update();
     		button_task_execute();
-    		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
+
     		ButtonNextRun += BUTTON_PERIOD_TICKS;
     	  }
+
+    	  if (ticks > JoystickNextRun)
+			  {
+
+
+				joystick_task();
+
+				JoystickNextRun += JOYSTICK_PERIOD_TICKS;
+
+			  }
+
+
     	}
 
 
@@ -52,6 +69,15 @@ void app_main(void) {
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
+
+
+
+}
+
+
+void joystick_task(void)
+{
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
 
 }
 
