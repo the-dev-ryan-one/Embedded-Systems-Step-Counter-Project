@@ -1,6 +1,8 @@
 #include "app.h"
 #include "gpio.h"
 
+static int count;
+
 void app_main(void) {
 
     HAL_Delay(200);
@@ -35,14 +37,15 @@ void app_main(void) {
         rgb_led_off(RGB_DOWN);
     }
 
-    if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10)) {
-        rgb_colour_on(RGB_RED);
-        rgb_colour_on(RGB_GREEN);
-        rgb_colour_on(RGB_BLUE);
-        rgb_led_on(RGB_RIGHT);
-    } else {
-        rgb_led_off(RGB_RIGHT);
-    }
+//    if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10)) {
+//        rgb_colour_on(RGB_RED);
+//        rgb_colour_on(RGB_GREEN);
+//        rgb_colour_on(RGB_BLUE);
+//        rgb_led_on(RGB_RIGHT);
+//    } else {
+//        rgb_led_off(RGB_RIGHT);
+//    }
+
 
     if (!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))) {
         rgb_colour_on(RGB_RED);
@@ -52,4 +55,12 @@ void app_main(void) {
     } else {
         rgb_led_off(RGB_LEFT);
     }
+}
+
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin & GPIO_PIN_10)
+	{
+		count++;
+		rgb_led_toggle(RGB_RIGHT);
+	}
 }

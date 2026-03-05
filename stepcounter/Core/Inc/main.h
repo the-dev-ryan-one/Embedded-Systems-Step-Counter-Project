@@ -85,6 +85,7 @@ void Error_Handler(void);
 #define RGB_BLUE_GPIO_Port GPIOD
 #define SW3_Pin GPIO_PIN_10
 #define SW3_GPIO_Port GPIOC
+#define SW3_EXTI_IRQn EXTI4_15_IRQn
 
 /* USER CODE BEGIN Private defines */
 

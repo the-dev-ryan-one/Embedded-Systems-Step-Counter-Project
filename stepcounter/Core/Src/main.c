@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "gpio.h"
-
 #include "app.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -101,7 +100,6 @@ int main(void)
 
 	app_main();
     /* USER CODE END WHILE */
-
 
     /* USER CODE BEGIN 3 */
   }
