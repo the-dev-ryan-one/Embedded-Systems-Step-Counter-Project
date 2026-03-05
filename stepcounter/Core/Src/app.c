@@ -1,6 +1,7 @@
 #include "app.h"
 #include "gpio.h"
 #include "buttons.h"
+#include "adc.h"
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)
@@ -13,6 +14,8 @@
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
+
+static uint16_t raw_adc[2];
 
 void blinky_task_execute(void);
 void button_task_execute(void);
@@ -39,6 +42,7 @@ void app_main(void) {
     	  {
     		buttons_update();
     		button_task_execute();
+    		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
     		ButtonNextRun += BUTTON_PERIOD_TICKS;
     	  }
     	}
@@ -46,6 +50,11 @@ void app_main(void) {
 
 
 }
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
+
+}
+
 
 void blinky_task_execute(void)
 {
