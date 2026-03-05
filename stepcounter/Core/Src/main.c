@@ -95,6 +95,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  buttons_init();
 
   while (1)
   {
