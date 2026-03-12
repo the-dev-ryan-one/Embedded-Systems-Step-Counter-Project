@@ -14,6 +14,9 @@
 
 #include "usart.h"
 
+#include "tim.h"
+#include "pwm.h"
+
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)
@@ -66,14 +69,22 @@ void display_task_execute(void) {
 		HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
 		HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
-
-
-
-
-
 }
 
 
+void PWM_Init(void) {
+    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, 25);
+}
+
+uint8_t dutyCycle = 25; // initial 25%
+
+void SW1_Pressed(void) {
+    dutyCycle += 25;      // increase by 25%
+    if (dutyCycle > 100)  // wrap around
+        dutyCycle = 0;
+
+    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, dutyCycle);
+}
 
 
 
@@ -88,6 +99,9 @@ void app_main(void) {
 	buttons_init();
 
 	ssd1306_Init();
+
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+
 
 
 
