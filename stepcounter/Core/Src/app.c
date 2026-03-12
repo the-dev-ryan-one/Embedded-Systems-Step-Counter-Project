@@ -8,26 +8,40 @@
 #include "task_blinky.h"
 #include "task_button.h"
 
+#include "ssd1306.h"
+#include "ssd1306_fonts.h"
+#include "ssd1306_conf.h"
+
+
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)
 
 #define BLINKY_FREQUENCY_HZ 2
 #define BUTTON_FREQUENCY_HZ 56
 #define JOYSTICK_FREQUENCY_HZ 56
+#define DISPLAY_FREQUENCY_HZ 4
 
 #define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
 #define JOYSTICK_PERIOD_TICKS (TICK_FREQUENCY_HZ/JOYSTICK_FREQUENCY_HZ)
-
+#define DISPLAY_PERIOD_TICKS (TICK_FREQUENCY_HZ/DISPLAY_FREQUENCY_HZ)
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
+static uint32_t DisplayNextRun = 0;
 
-//static uint16_t raw_adc[2];
 
-//void blinky_task_execute(void);
-//void button_task_execute(void);
+
+void display_task_execute(void) {
+
+ ssd1306_UpdateScreen();
+
+}
+
+
+
+
 
 
 void app_main(void) {
@@ -35,12 +49,24 @@ void app_main(void) {
 	BlinkyNextRun = HAL_GetTick() + BLINKY_PERIOD_TICKS;
 	ButtonNextRun = HAL_GetTick() + BUTTON_PERIOD_TICKS;
 	JoystickNextRun = HAL_GetTick() + JOYSTICK_PERIOD_TICKS;
+	DisplayNextRun = HAL_GetTick() + DISPLAY_PERIOD_TICKS;
 
 	buttons_init();
+
+	ssd1306_Init();
+	ssd1306_SetCursor(0, 0);
+	ssd1306_WriteString("Hello world!", Font_7x10, White);
+
 
     while(1)
     	{
     	  uint32_t ticks = HAL_GetTick();
+
+    	  if(ticks > DisplayNextRun)
+		  {
+    		 display_task_execute();
+    		 DisplayNextRun += DISPLAY_PERIOD_TICKS;
+		  }
 
     	  if(ticks > BlinkyNextRun)
     	  {
@@ -73,62 +99,5 @@ void app_main(void) {
 
 }
 
-//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
-//
-//
-//
-//}
 
 
-//void joystick_task(void)
-//{
-//	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
-//
-//}
-
-
-//void blinky_task_execute(void)
-//{
-//	// Task one logic
-//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-//
-//}
-
-//void button_task_execute(void)
-//{
-//	// Task two logic
-//
-//	if (buttons_checkButton (LEFT) == PUSHED) {
-//
-//	        rgb_colour_all_on();
-//	        rgb_led_on(RGB_LEFT);
-//	    } else {
-//	        rgb_led_off(RGB_LEFT);
-//	    }
-//
-//	    if (buttons_checkButton (UP) == PUSHED) {
-//
-//	    	rgb_colour_all_on();
-//
-//	        rgb_led_on(RGB_UP);
-//	    } else {
-//	        rgb_led_off(RGB_UP);
-//	    }
-//
-//	    if (buttons_checkButton (DOWN) == PUSHED) {
-//
-//	    	rgb_colour_all_on();
-//	        rgb_led_on(RGB_DOWN);
-//	    } else {
-//	        rgb_led_off(RGB_DOWN);
-//	    }
-//
-//	    if (buttons_checkButton (RIGHT) == PUSHED) {
-//
-//	    	rgb_colour_all_on();
-//	        rgb_led_on(RGB_RIGHT);
-//	    } else {
-//	        rgb_led_off(RGB_RIGHT);
-//	    }
-//
-//}
