@@ -12,6 +12,8 @@
 #include "ssd1306_fonts.h"
 #include "ssd1306_conf.h"
 
+#include "usart.h"
+
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)
@@ -31,11 +33,43 @@ static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
 
+#include <stdio.h>
+#include <string.h>
+
 
 
 void display_task_execute(void) {
 
- ssd1306_UpdateScreen();
+	char buffer[32];
+
+	uint16_t x = getJoyStickX();
+
+	ssd1306_SetCursor(0, 0);
+
+	snprintf(buffer , sizeof(buffer) , "Joy X: %u", x );
+
+	ssd1306_WriteString( buffer, Font_7x10, White);
+
+	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+		HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
+
+	uint16_t y = getJoyStickY();
+
+		ssd1306_SetCursor(0, 16);
+
+		snprintf(buffer , sizeof(buffer) , "Joy Y: %u", y );
+
+		ssd1306_WriteString( buffer, Font_7x10, White);
+
+		 ssd1306_UpdateScreen();
+
+		HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+		HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
+
+
+
+
+
 
 }
 
@@ -54,8 +88,7 @@ void app_main(void) {
 	buttons_init();
 
 	ssd1306_Init();
-	ssd1306_SetCursor(0, 0);
-	ssd1306_WriteString("Hello world!", Font_7x10, White);
+
 
 
     while(1)

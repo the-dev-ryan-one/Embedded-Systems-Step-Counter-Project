@@ -77,8 +77,6 @@ void Error_Handler(void);
 #define JOYSTICK_Y_GPIO_Port GPIOC
 #define JOYSTICK_CLICK_Pin GPIO_PIN_1
 #define JOYSTICK_CLICK_GPIO_Port GPIOB
-#define RGB_DS3_Pin GPIO_PIN_6
-#define RGB_DS3_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_9
 #define LD2_GPIO_Port GPIOC
 #define RGB_GREEN_Pin GPIO_PIN_2

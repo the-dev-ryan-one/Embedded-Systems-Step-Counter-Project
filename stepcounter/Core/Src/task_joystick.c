@@ -6,6 +6,16 @@
 
 static uint16_t raw_adc[2];
 
+uint16_t getJoyStickX (void) {
+
+	return raw_adc[1];
+}
+
+uint16_t getJoyStickY (void) {
+
+	return raw_adc[0];
+}
+
 
 void joystick_task(void)
 {

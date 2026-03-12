@@ -4,6 +4,8 @@
 
 
 void joystick_task(void);
+uint16_t getJoyStickX (void);
+uint16_t getJoyStickY (void);
 
 
 #endif
