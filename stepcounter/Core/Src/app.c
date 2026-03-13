@@ -40,34 +40,27 @@ static uint32_t DisplayNextRun = 0;
 #include <string.h>
 
 
-
 void display_task_execute(void) {
 
-	char buffer[32];
+    char buffer[32];
 
-	uint16_t x = getJoyStickX();
+    uint16_t x = getJoyStickX();
+    ssd1306_SetCursor(0, 0);
+    snprintf(buffer, sizeof(buffer), "Joy X value: %u", x);
+    ssd1306_WriteString(buffer, Font_7x10, White);
 
-	ssd1306_SetCursor(0, 0);
+    HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+    HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
-	snprintf(buffer , sizeof(buffer) , "Joy X: %u", x );
+    uint16_t y = getJoyStickY();
+    ssd1306_SetCursor(0, 16);
+    snprintf(buffer, sizeof(buffer), "Joy Y value: %u", y);
 
-	ssd1306_WriteString( buffer, Font_7x10, White);
+    ssd1306_WriteString(buffer, Font_7x10, White);
+    ssd1306_UpdateScreen();
 
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-		HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
-
-	uint16_t y = getJoyStickY();
-
-		ssd1306_SetCursor(0, 16);
-
-		snprintf(buffer , sizeof(buffer) , "Joy Y: %u", y );
-
-		ssd1306_WriteString( buffer, Font_7x10, White);
-
-		 ssd1306_UpdateScreen();
-
-		HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-		HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
+    HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+    HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
 }
 
@@ -78,8 +71,10 @@ void PWM_Init(void) {
 
 uint8_t dutyCycle = 25; // initial 25%
 
-void SW1_Pressed(void) {
-    dutyCycle += 25;      // increase by 25%
+void SW1PressEvent(void) {
+
+	dutyCycle += 10;
+
     if (dutyCycle > 100)  // wrap around
         dutyCycle = 0;
 
@@ -99,6 +94,9 @@ void app_main(void) {
 	buttons_init();
 
 	ssd1306_Init();
+
+	PWM_Init();
+
 
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
 
