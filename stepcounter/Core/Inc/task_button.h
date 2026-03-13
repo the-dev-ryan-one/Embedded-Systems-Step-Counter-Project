@@ -4,5 +4,6 @@
 
 
 void button_task_execute(void);
+void initialisePWM(void);
 
 #endif

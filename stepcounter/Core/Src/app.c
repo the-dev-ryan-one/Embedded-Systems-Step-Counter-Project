@@ -3,10 +3,13 @@
 #include "gpio.h"
 #include "buttons.h"
 #include "adc.h"
+#include <stdio.h>
+#include <string.h>
 
 #include "task_joystick.h"
 #include "task_blinky.h"
 #include "task_button.h"
+#include "task_display.h"
 
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
@@ -36,107 +39,7 @@ static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
 
-#include <stdio.h>
-#include <string.h>
-
 bool serialDebugFlag = false;
-
-
-void display_task_execute(void) {
-
-    char buffer[32];
-
-    uint16_t x = getJoyStickX();
-    uint16_t maxXValue = 3850;
-    uint16_t minXValue = 470;
-
-    uint16_t percentageXdisplacement = ((x - minXValue) * 100) / (maxXValue - minXValue);
-    if (percentageXdisplacement > 100) {
-    	percentageXdisplacement = 100;
-    }
-
-    char* xJoyDirection;
-
-    if (percentageXdisplacement > 60) {
-
-    	xJoyDirection = "Left";
-
-
-    } else if (percentageXdisplacement < 40) {
-    	xJoyDirection = "Right";
-    } else {
-    	xJoyDirection = "Rest";
-    }
-
-
-
-
-    ssd1306_Fill(Black);
-    ssd1306_SetCursor(0, 0);
-    snprintf(buffer, sizeof(buffer), "Joy X : %s %u", xJoyDirection , percentageXdisplacement);
-    ssd1306_WriteString(buffer, Font_7x10, White);
-
-    if (serialDebugFlag) {
-
-    HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-    HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
-
-    }
-
-    uint16_t y = getJoyStickY();
-    uint16_t maxYValue = 3900;
-    uint16_t minYValue = 335;
-
-    uint16_t percentageYdisplacement = ((y - minYValue) * 100) / (maxYValue - minYValue);
-    if (percentageYdisplacement > 100) {
-        	percentageYdisplacement = 100;
-        }
-
-    char* yJoyDirection;
-
-    if (percentageYdisplacement > 60) {
-        yJoyDirection = "Down";
-    } else if (percentageYdisplacement < 40) {
-        yJoyDirection = "Up";
-    } else {
-        yJoyDirection = "Rest";
-    }
-
-
-    ssd1306_SetCursor(0, 16);
-    snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", yJoyDirection , percentageYdisplacement);
-
-    ssd1306_WriteString(buffer, Font_7x10, White);
-    ssd1306_UpdateScreen();
-
-    if (serialDebugFlag) {
-
-    HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-    HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
-
-    }
-
-}
-
-
-void PWM_Init(void) {
-    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, 25);
-}
-
-uint8_t dutyCycle = 25; // initial 25%
-
-void SW1PressEvent(void) {
-
-	dutyCycle += 10;
-
-    if (dutyCycle > 100)  // wrap around
-        dutyCycle = 0;
-
-    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, dutyCycle);
-}
-
-
-
 
 void app_main(void) {
 
@@ -146,16 +49,8 @@ void app_main(void) {
 	DisplayNextRun = HAL_GetTick() + DISPLAY_PERIOD_TICKS;
 
 	buttons_init();
-
 	ssd1306_Init();
-
-	PWM_Init();
-
-
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-
-
-
+	initialisePWM();
 
     while(1)
     	{
@@ -184,17 +79,11 @@ void app_main(void) {
     	  if (ticks > JoystickNextRun)
 			  {
 
-
 				joystick_task();
-
 				JoystickNextRun += JOYSTICK_PERIOD_TICKS;
 
 			  }
-
-
     	}
-
-
 
 }
 

@@ -1,14 +1,23 @@
 
 #include <stdbool.h>
-
 #include "rgb.h"
 #include "buttons.h"
-
+#include "pwm.h"
+#include "tim.h"
 #include "app.h"
-
 #include "task_button.h"
 
+static uint8_t dutyCycle = 25;
 
+void SW1PressEvent(void) {
+
+    dutyCycle += 10;
+
+    if (dutyCycle > 100)
+        dutyCycle = 0;
+
+    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, dutyCycle);
+}
 
 
 void button_task_execute(void)
@@ -26,9 +35,7 @@ void button_task_execute(void)
 
 
 	    	SW1PressEvent();
-//	    	rgb_colour_all_on();
-//
-//	        rgb_led_on(RGB_UP);
+
 
 	    } else {
 	        rgb_led_off(RGB_UP);
