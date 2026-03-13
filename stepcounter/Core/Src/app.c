@@ -39,28 +39,41 @@ static uint32_t DisplayNextRun = 0;
 #include <stdio.h>
 #include <string.h>
 
+bool serialDebugFlag = false;
+
 
 void display_task_execute(void) {
 
     char buffer[32];
 
     uint16_t x = getJoyStickX();
+
+    ssd1306_Fill(Black);
     ssd1306_SetCursor(0, 0);
     snprintf(buffer, sizeof(buffer), "Joy X value: %u", x);
     ssd1306_WriteString(buffer, Font_7x10, White);
 
+    if (serialDebugFlag) {
+
     HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
     HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
+    }
+
     uint16_t y = getJoyStickY();
+
     ssd1306_SetCursor(0, 16);
     snprintf(buffer, sizeof(buffer), "Joy Y value: %u", y);
 
     ssd1306_WriteString(buffer, Font_7x10, White);
     ssd1306_UpdateScreen();
 
+    if (serialDebugFlag) {
+
     HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
     HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
+
+    }
 
 }
 

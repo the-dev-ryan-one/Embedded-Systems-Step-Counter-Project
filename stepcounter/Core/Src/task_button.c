@@ -1,4 +1,6 @@
 
+#include <stdbool.h>
+
 #include "rgb.h"
 #include "buttons.h"
 
@@ -6,22 +8,6 @@
 
 #include "task_button.h"
 
-//void PWM_Init(void) {
-//    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, 25);
-//}
-//
-//
-//uint8_t dutyCycle = 25; // initial 25%
-//
-//void SW1PressEvent(void) {
-//
-//	dutyCycle += 10;
-//
-//    if (dutyCycle > 100)  // wrap around
-//        dutyCycle = 0;
-//
-//    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, dutyCycle);
-//}
 
 
 
@@ -49,6 +35,10 @@ void button_task_execute(void)
 	    }
 
 	    if (buttons_checkButton (DOWN) == PUSHED) {
+
+	    	serialDebugFlag = !serialDebugFlag;
+
+
 
 	    	rgb_colour_all_on();
 	        rgb_led_on(RGB_DOWN);
