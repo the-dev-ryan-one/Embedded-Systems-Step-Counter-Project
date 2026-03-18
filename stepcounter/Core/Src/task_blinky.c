@@ -2,7 +2,12 @@
 #include "gpio.h"
 #include "task_blinky.h"
 
-
+/*
+ * task_blinky.c
+ * Blinky task module - toggles the onboard LED
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 2026
+ */
 
 void blinky_task_execute(void)
 {

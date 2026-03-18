@@ -1,3 +1,9 @@
+/*
+ * task_button.c
+ * Button task module - handles button presses and controls LED brightness via PWM
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 2026
+ */
 
 #include <stdbool.h>
 #include "rgb.h"

@@ -1,6 +1,13 @@
 
-#include "adc.h"
+/*
+ * task_joystick.c
+ * Joystick task module - reads X and Y axis ADC values using DMA
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 2026
+ */
 
+
+#include "adc.h"
 #include "task_joystick.h"
 
 

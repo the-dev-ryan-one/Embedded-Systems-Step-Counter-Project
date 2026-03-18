@@ -1,3 +1,13 @@
+/*
+ * task_display.c
+ * Display task module - updates the OLED screen with joystick values
+ * and optionally outputs debug info over UART
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 2026
+ */
+
+#include <stdio.h>
+#include "task_joystick.h"
 
 #include "task_display.h"
 #include "ssd1306.h"

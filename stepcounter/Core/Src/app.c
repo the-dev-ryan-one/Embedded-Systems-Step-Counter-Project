@@ -1,3 +1,9 @@
+/*
+ * app.c
+ * Main application module - initialises peripherals and runs the task scheduler
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 2026
+ */
 
 #include "app.h"
 #include "gpio.h"
@@ -28,6 +34,7 @@
 #define BUTTON_FREQUENCY_HZ 56
 #define JOYSTICK_FREQUENCY_HZ 56
 #define DISPLAY_FREQUENCY_HZ 4
+
 
 #define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
