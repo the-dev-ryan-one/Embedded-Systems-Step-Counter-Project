@@ -7,7 +7,7 @@
 #include "app.h"
 #include "task_button.h"
 
-static uint8_t dutyCycle = 25;
+static uint8_t dutyCycle = 0;
 
 void SW1PressEvent(void) {
 
@@ -22,13 +22,12 @@ void SW1PressEvent(void) {
 
 void button_task_execute(void)
 {
+	rgb_colour_all_on();
 
 	if (buttons_checkButton (LEFT) == PUSHED) {
 
-	        rgb_colour_all_on();
-	        rgb_led_on(RGB_LEFT);
 	    } else {
-	        rgb_led_off(RGB_LEFT);
+
 	    }
 
 	    if (buttons_checkButton (UP) == PUSHED) {
@@ -36,29 +35,19 @@ void button_task_execute(void)
 
 	    	SW1PressEvent();
 
-
-	    } else {
-	        rgb_led_off(RGB_UP);
 	    }
 
 	    if (buttons_checkButton (DOWN) == PUSHED) {
 
 	    	serialDebugFlag = !serialDebugFlag;
 
-
-
-	    	rgb_colour_all_on();
-	        rgb_led_on(RGB_DOWN);
-	    } else {
-	        rgb_led_off(RGB_DOWN);
 	    }
 
 	    if (buttons_checkButton (RIGHT) == PUSHED) {
 
-	    	rgb_colour_all_on();
-	        rgb_led_on(RGB_RIGHT);
+
 	    } else {
-	        rgb_led_off(RGB_RIGHT);
+
 	    }
 
 }

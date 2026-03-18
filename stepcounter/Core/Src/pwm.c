@@ -8,8 +8,9 @@
 #include "pwm.h"
 
 void initialisePWM(void) {
-    pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, 25);
+
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+	pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, 0);
 }
 
 
@@ -27,6 +28,7 @@ void pwm_setDutyCycle(TIM_HandleTypeDef* tim, uint32_t tim_channel, uint8_t duty
 
 	__HAL_TIM_SET_COMPARE(tim, tim_channel, desiredCompare);
 }
+
 
 uint8_t pwm_getDutyCycle(TIM_HandleTypeDef* tim, uint32_t tim_channel)
 {
