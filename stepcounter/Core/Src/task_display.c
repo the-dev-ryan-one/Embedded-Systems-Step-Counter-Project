@@ -46,6 +46,9 @@ void display_task_execute(void) {
     ssd1306_WriteString(buffer, Font_7x10, White);
 
     if (serialDebugFlag) {
+
+    	snprintf(buffer, sizeof(buffer), "Joy X : %s %u", xJoyDirection , x);
+
         HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
         HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
     }
@@ -75,6 +78,8 @@ void display_task_execute(void) {
     ssd1306_UpdateScreen();
 
     if (serialDebugFlag) {
+
+    	snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", yJoyDirection , y);
         HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
         HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
     }
