@@ -56,6 +56,9 @@ void button_task_execute(void)
 	    	serialDebugFlag = !serialDebugFlag;
 
 	    	consecutiveSW2Presses ++ ;
+	    	if (consecutiveSW2Presses >= 3) {
+	    		testStateFlag = !testStateFlag;
+	    	}
 
 
 

@@ -14,6 +14,12 @@
 
 /* flag to toggle for serial debug */
 extern bool serialDebugFlag;
+extern bool testStateFlag;
+
+
+extern uint16_t stepGoal;
+extern uint16_t steps;
+extern uint16_t distance;
 
 /* main application */
 void app_main(void);

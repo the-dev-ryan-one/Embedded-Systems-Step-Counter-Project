@@ -50,6 +50,7 @@ static uint32_t DisplayNextRun = 0;
 static uint32_t SW2PressesResetNextRun = 0;
 
 bool serialDebugFlag = false;
+bool testStateFlag = false;
 
 // reset Values
 uint16_t stepGoal = 1000;
