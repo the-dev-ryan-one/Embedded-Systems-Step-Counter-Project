@@ -1,6 +1,10 @@
 #ifndef TASK_DISPLAY_H
 #define TASK_DISPLAY_H
 
+extern uint16_t steps;
+extern uint16_t distance;
+extern uint16_t stepGoal;
+
 
 /*
  * task_display.h

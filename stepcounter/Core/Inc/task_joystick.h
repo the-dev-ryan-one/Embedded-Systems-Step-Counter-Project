@@ -1,6 +1,19 @@
+#include <stdint.h>
 
 #ifndef task_joystick_h
 #define task_joystick_h
+
+extern uint16_t percentageXdisplacement;
+extern uint16_t percentageYdisplacement;
+extern char* xJoyDirection;
+extern char* yJoyDirection;
+extern uint16_t y;
+extern uint16_t x;
+extern uint16_t maxXValue;
+extern uint16_t minXValue;
+extern uint16_t maxYValue;
+extern uint16_t minYValue;
+
 
 /*
  * task_joystick.h
@@ -8,8 +21,6 @@
  * Authors: Ryan Teape, Felissa Chian
  * Date: 2026
  */
-
-#include <stdint.h>
 
 /* Runs the joystick task , reads the ADC values from the joystick */
 void joystick_task(void);

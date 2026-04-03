@@ -14,6 +14,12 @@
 #include "task_button.h"
 
 static uint8_t dutyCycle = 0;
+uint8_t consecutiveSW2Presses = 0;
+
+
+void resetSW2PressesAfterDelay(void) {
+	consecutiveSW2Presses = 0;
+}
 
 void SW1PressEvent(void) {
 
@@ -32,6 +38,8 @@ void button_task_execute(void)
 
 	if (buttons_checkButton (LEFT) == PUSHED) {
 
+		steps += 7;
+
 	    } else {
 
 	    }
@@ -47,6 +55,10 @@ void button_task_execute(void)
 
 	    	serialDebugFlag = !serialDebugFlag;
 
+	    	consecutiveSW2Presses ++ ;
+
+
+
 	    }
 
 	    if (buttons_checkButton (RIGHT) == PUSHED) {
@@ -55,5 +67,7 @@ void button_task_execute(void)
 	    } else {
 
 	    }
+
+
 
 }

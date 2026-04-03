@@ -2,6 +2,10 @@
 #ifndef task_button_h
 #define task_button_h
 
+extern uint16_t steps;
+extern uint16_t distance;
+extern uint16_t stepGoal;
+
 
 /*
  * task_button.h
@@ -15,5 +19,7 @@ void button_task_execute(void);
 
 /* Initialises the PWM */
 void initialisePWM(void);
+
+void resetSW2PressesAfterDelay(void);
 
 #endif

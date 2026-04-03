@@ -34,19 +34,27 @@
 #define BUTTON_FREQUENCY_HZ 56
 #define JOYSTICK_FREQUENCY_HZ 56
 #define DISPLAY_FREQUENCY_HZ 4
+#define SW2RESET_FREQUENCY_HZ 1
 
 
 #define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
 #define JOYSTICK_PERIOD_TICKS (TICK_FREQUENCY_HZ/JOYSTICK_FREQUENCY_HZ)
 #define DISPLAY_PERIOD_TICKS (TICK_FREQUENCY_HZ/DISPLAY_FREQUENCY_HZ)
+#define SW2RESET_PERIOD_TICKS (TICK_FREQUENCY_HZ/SW2RESET_FREQUENCY_HZ)
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
+static uint32_t SW2PressesResetNextRun = 0;
 
 bool serialDebugFlag = false;
+
+// reset Values
+uint16_t stepGoal = 1000;
+uint16_t steps = 0;
+uint16_t distance = 0;
 
 void app_main(void) {
 
@@ -90,6 +98,12 @@ void app_main(void) {
 				JoystickNextRun += JOYSTICK_PERIOD_TICKS;
 
 			  }
+
+    	  if (ticks > SW2PressesResetNextRun) {
+    		  resetSW2PressesAfterDelay();
+    		  SW2PressesResetNextRun += SW2RESET_PERIOD_TICKS;
+    	  }
+
     	}
 
 }
