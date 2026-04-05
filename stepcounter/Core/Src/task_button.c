@@ -55,10 +55,14 @@ void button_task_execute(void)
 
 	    	serialDebugFlag = !serialDebugFlag;
 
-	    	consecutiveSW2Presses ++ ;
-	    	if (consecutiveSW2Presses >= 3) {
+	    	uint32_t currTime = HAL_GetTick();
+
+	    	consecutiveSW2Presses++;
+
+	    	if (consecutiveSW2Presses >= 2) {
 	    		testStateFlag = !testStateFlag;
 	    	}
+
 
 
 

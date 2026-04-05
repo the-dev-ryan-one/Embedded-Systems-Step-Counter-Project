@@ -57,6 +57,9 @@ uint16_t stepGoal = 1000;
 uint16_t steps = 0;
 uint16_t distance = 0;
 
+
+displayState currDisplayState = CurrentSteps;
+
 void app_main(void) {
 
 	BlinkyNextRun = HAL_GetTick() + BLINKY_PERIOD_TICKS;
@@ -100,10 +103,10 @@ void app_main(void) {
 
 			  }
 
-    	  if (ticks > SW2PressesResetNextRun) {
-    		  resetSW2PressesAfterDelay();
-    		  SW2PressesResetNextRun += SW2RESET_PERIOD_TICKS;
-    	  }
+//    	  if (ticks > SW2PressesResetNextRun) {
+//    		  resetSW2PressesAfterDelay();
+//    		  SW2PressesResetNextRun += SW2RESET_PERIOD_TICKS;
+//    	  }
 
     	}
 

@@ -21,6 +21,15 @@ extern uint16_t stepGoal;
 extern uint16_t steps;
 extern uint16_t distance;
 
+typedef enum {
+	CurrentSteps = 0,
+	GoalProgress,
+	DistanceTravelled
+} displayState;
+
+extern displayState currDisplayState;
+
+
 /* main application */
 void app_main(void);
 

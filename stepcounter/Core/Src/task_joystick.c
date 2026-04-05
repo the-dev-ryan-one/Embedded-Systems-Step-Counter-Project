@@ -99,7 +99,9 @@ void joystick_task(void)
 
 	 } else if (y < ydeadZoneLowerBound) {
 		 yJoyDirection = "Up";
+		 if (testStateFlag) {
 		 steps += incrementStep(percentageYdisplacement);
+		 }
 	 } else {
 		 yJoyDirection = "Rest";
 	 }
@@ -110,6 +112,7 @@ void joystick_task(void)
 			xJoyDirection = "Left";
 		 } else if (x < xdeadZoneLowerBound) {
 			 xJoyDirection = "Right";
+			 currDisplayState = (currDisplayState + 1)%3;
 		 } else {
 			 xJoyDirection = "Rest";
 		 }
