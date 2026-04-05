@@ -55,7 +55,7 @@ bool testStateFlag = false;
 // reset Values
 uint16_t stepGoal = 1000;
 uint16_t steps = 0;
-uint16_t distance = 0;
+uint16_t distanceTravelled = 0;
 
 
 displayState currDisplayState = CurrentSteps;

@@ -110,6 +110,7 @@ void joystick_task(void)
 
 	 if (x > xdeadZoneUpBound) {
 			xJoyDirection = "Left";
+			currDisplayState = (currDisplayState - 1)%3;
 		 } else if (x < xdeadZoneLowerBound) {
 			 xJoyDirection = "Right";
 			 currDisplayState = (currDisplayState + 1)%3;

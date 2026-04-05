@@ -32,8 +32,11 @@ void printInputToScreen(uint8_t line , char* inputStr , uint16_t valToPrint ) {
 void displayCurrentSteps(void) {
 
 
-	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "Current Steps: %u", steps);
+	ssd1306_SetCursor(16, 16);
+	snprintf(buffer, sizeof(buffer), "Steps: %u", steps);
+	ssd1306_WriteString(buffer, Font_7x10, White);
+	ssd1306_SetCursor(16, 32);
+	snprintf(buffer, sizeof(buffer), "Units: %u", steps);
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 }
