@@ -31,7 +31,6 @@ void printInputToScreen(uint8_t line , char* inputStr , uint16_t valToPrint ) {
 
 void displayCurrentSteps(void) {
 
-
 	ssd1306_SetCursor(16, 16);
 	snprintf(buffer, sizeof(buffer), "Steps: %u", steps);
 	ssd1306_WriteString(buffer, Font_7x10, White);
@@ -40,7 +39,6 @@ void displayCurrentSteps(void) {
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 }
-
 
 void displayGoalProgress(void) {
 
@@ -53,9 +51,25 @@ void displayGoalProgress(void) {
 
 void displayDistanceTravelled(void) {
 
-	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "Distance Traveled: %u", steps);
-	ssd1306_WriteString(buffer, Font_7x10, White);
+//	ssd1306_SetCursor(0, 0);
+//	snprintf(buffer, sizeof(buffer), "Distance Traveled: %u", steps);
+//	ssd1306_WriteString(buffer, Font_7x10, White);
+//	ssd1306_SetCursor(0, 16);
+
+	switch(currDistanceDisplayUnits)
+		{
+		case km:
+
+			ssd1306_SetCursor(0, 0);
+			snprintf(buffer, sizeof(buffer), "Dist: %u km", steps);
+			ssd1306_WriteString(buffer, Font_7x10, White);
+			break;
+		case yd:
+			ssd1306_SetCursor(0, 0);
+			snprintf(buffer, sizeof(buffer), "Dist: %u yd", steps);
+			ssd1306_WriteString(buffer, Font_7x10, White);
+			break;
+		}
 
 }
 

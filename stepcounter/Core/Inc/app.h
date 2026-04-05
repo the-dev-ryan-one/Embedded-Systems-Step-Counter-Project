@@ -27,7 +27,20 @@ typedef enum {
 	DistanceTravelled
 } displayState;
 
+typedef enum {
+	km = 0,
+	yd
+
+} distanceDisplayUnits;
+
+typedef enum {
+	stepsUnit = 0,
+	percentToGoal
+
+} stepDisplayUnits;
+
 extern displayState currDisplayState;
+extern distanceDisplayUnits currDistanceDisplayUnits;
 
 
 /* main application */

@@ -99,6 +99,13 @@ void joystick_task(void)
 
 	 } else if (y < ydeadZoneLowerBound) {
 		 yJoyDirection = "Up";
+
+		 if (currDisplayState == DistanceTravelled) {
+			 currDistanceDisplayUnits += 1 % 2;
+		 } else if (currDisplayState == DistanceTravelled) {
+			 currDistanceDisplayUnits += 1 % 2;
+		 }
+
 		 if (testStateFlag) {
 		 steps += incrementStep(percentageYdisplacement);
 		 }

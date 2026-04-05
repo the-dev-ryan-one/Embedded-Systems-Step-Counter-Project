@@ -59,6 +59,7 @@ uint16_t distanceTravelled = 0;
 
 
 displayState currDisplayState = CurrentSteps;
+distanceDisplayUnits currDistanceDisplayUnits = km;
 
 void app_main(void) {
 
