@@ -29,17 +29,22 @@ char* xJoyDirection = "Rest";
 char* yJoyDirection = "Rest";
 
 
-#define maxStepIncrement 100
 #define uint16MaxVal 65535
 
 
 #define adcRestValX 2203
 #define adcMaxValX 3835
 #define adcMinValX 454
+#define xdeadZoneUpBound 2643
+#define xdeadZoneLowerBound 1762
 
 #define adcRestValY 2233
 #define adcMaxValY 3900
 #define adcMinValY 343
+#define ydeadZoneUpBound 2679
+#define ydeadZoneLowerBound 1786
+
+#define MAX_STEP_INCREMENT 4
 
 uint16_t getJoyStickX (void) {
 
@@ -51,21 +56,11 @@ uint16_t getJoyStickY (void) {
 	return raw_adc[0];
 }
 
-int16_t calcStepIncrement(uint16_t percentageYdisplacement) {
-//		float stepIncrementCoEfficient = 0.5 - (percentageYdisplacement/ 100.0f);
-//
-//		int16_t toReturn = (int16_t)(maxStepIncrement*stepIncrementCoEfficient);
-//
-//		return toReturn;
+int16_t incrementStep(uint16_t percentageYdisplacement) {
 
-		if (percentageYdisplacement >= 55) {
-	        // 55→100 maps to 1→1000
-	        return (int16_t)((percentageYdisplacement - 55.0) / (100.0 - 55.0) * (1000.0 - 1.0) + 1.0);
-	    } else if (percentageYdisplacement <= 45) {
-	        // 45→0 maps to -1→-1000
-	        return (int16_t)((percentageYdisplacement - 45.0) / (0.0 - 45.0) * (-1000.0 - (-1.0)) + (-1.0));
-	    }
-	    return 0; // dead zone 46–54
+	float coeffcient = (float)(percentageYdisplacement / 100.0);
+	int16_t toReturn = (int16_t)MAX_STEP_INCREMENT * coeffcient;
+	return toReturn;
 
 }
 
@@ -78,8 +73,6 @@ void joystick_task(void)
 	x = getJoyStickX();
 	y = getJoyStickY();
 
-
-
 	if (x > adcRestValX) {
 			percentageXdisplacement = (x - adcRestValX)*100 / (adcMaxValX - adcRestValX);
 		} else {
@@ -89,7 +82,6 @@ void joystick_task(void)
 	if (percentageXdisplacement > 100) {
 		percentageXdisplacement = 100;
 	}
-
 
 	if (y > adcRestValY) {
 				percentageYdisplacement = (y - adcRestValY)*100 / (adcMaxValY - adcRestValY);
@@ -102,24 +94,37 @@ void joystick_task(void)
 		}
 
 
-	     if (percentageYdisplacement > 60) {
-	         yJoyDirection = "Down";
-	     } else if (percentageYdisplacement < 40) {
-	         yJoyDirection = "Up";
-	     } else {
-	         yJoyDirection = "Rest";
-	     }
+	 if (y > ydeadZoneUpBound) {
+		 yJoyDirection = "Down";
 
-	     if (percentageYdisplacement >= 55 || percentageYdisplacement <= 45) {
+	 } else if (y < ydeadZoneLowerBound) {
+		 yJoyDirection = "Up";
+		 steps += incrementStep(percentageYdisplacement);
+	 } else {
+		 yJoyDirection = "Rest";
+	 }
 
-	    	 int16_t stepIncrement = calcStepIncrement(percentageYdisplacement);
 
-	    	if (steps + stepIncrement < uint16MaxVal) {
 
-	    	steps += stepIncrement;
-	    	}
+	 if (x > xdeadZoneUpBound) {
+			xJoyDirection = "Left";
+		 } else if (x < xdeadZoneLowerBound) {
+			 xJoyDirection = "Right";
+		 } else {
+			 xJoyDirection = "Rest";
+		 }
 
-	     }
+
+//	     if (percentageYdisplacement >= 55 || percentageYdisplacement <= 45) {
+//
+//	    	 int16_t stepIncrement = calcStepIncrement(percentageYdisplacement);
+//
+//	    	if (steps + stepIncrement < uint16MaxVal) {
+//
+//	    	steps += stepIncrement;
+//	    	}
+//
+//	     }
 
 }
 
