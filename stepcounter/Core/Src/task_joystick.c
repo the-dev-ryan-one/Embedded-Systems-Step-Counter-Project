@@ -232,118 +232,23 @@ void handleJoyLongPress(void) {
 	 } else {
 		 joyStickPressCounter = 0;
 	 }
-
 }
 
 
 void joystick_task(void)
 {
-//	static char* previousJoyXDirection = "Rest";
-//	static char* previousJoyYDirection = "Rest";
 
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
 
 	percentageXdisplacement = calcPercentageXDisplacement();
 	percentageYdisplacement = calcPercentageYDisplacement();
 
-//	x = getJoyStickX();
-//	y = getJoyStickY();
-
-//	if (x > adcRestValX) {
-//			percentageXdisplacement = (x - adcRestValX)*100 / (adcMaxValX - adcRestValX);
-//		} else {
-//			percentageXdisplacement = (adcRestValX - x)*100 / (adcRestValX - adcMinValX);
-//		}
-//
-//	if (percentageXdisplacement > 100) {
-//		percentageXdisplacement = 100;
-//	}
-
-//	if (y > adcRestValY) {
-//				percentageYdisplacement = (y - adcRestValY)*100 / (adcMaxValY - adcRestValY);
-//			} else {
-//				percentageYdisplacement = (adcRestValY - y)*100 / (adcRestValY - adcMinValY);
-//			}
-//
-//	if (percentageYdisplacement > 100) {
-//			percentageYdisplacement = 100;
-//		}
-
-//
-//	 if (y > ydeadZoneUpBound) {
-//		 yJoyDirection = "Down";
-//
-//	 }
-
 	setJoyXDirection();
 	setJoyYDirection();
 
 	toggleUnits();
 	cycleDisplayStates();
-
-//	 if (y < ydeadZoneLowerBound) {
-//		 yJoyDirection = "Up";
-//
-//		 if (previousJoyYDirection == "Rest") {
-//
-//			 if (currDisplayState == DistanceTravelled) {
-//				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
-//			 }
-//			 if (!testStateFlag && (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) ) {
-//				 stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
-//			 }
-//		 }
-//
-//		 } else {
-//			 yJoyDirection = "Rest";
-//		 }
-//
-//	 previousJoyYDirection = yJoyDirection;
-
-
-//	 if (x == 0) return;
-//
-//		 if (x > xdeadZoneUpBound) {
-//
-//			xJoyDirection = "Left";
-//			if (previousJoyXDirection == "Rest") {
-//
-//			currDisplayState = (currDisplayState + 2) % 3;
-//			}
-//
-//			}
-//
-//		 else if (x < xdeadZoneLowerBound) {
-//
-//		 xJoyDirection = "Right";
-//		 if (previousJoyXDirection == "Rest") {
-//			 currDisplayState = (currDisplayState + 1) % 3;
-//		 }
-//
-//		 } else {
-//			 xJoyDirection = "Rest";
-//		 }
-//
-//		 previousJoyXDirection = xJoyDirection;
-
-
-//		//-----------------------
-//		 static uint16_t joyStickPressCounter;
-//		 static bool joyStickLongPress = false;
-//
-//		 if (currDisplayState == GoalProgress && HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
-//			 joyStickPressCounter++;
-//			 if (joyStickPressCounter >= 56) {
-//				 joyStickLongPress = true;
-//				 inSetGoalState = true;
-//			 }
-//		 } else {
-//			 joyStickPressCounter = 0;
-//		 }
-
 	handleJoyLongPress();
-
-
 
 }
 
