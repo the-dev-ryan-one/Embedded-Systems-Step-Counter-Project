@@ -125,7 +125,6 @@ void joystick_task(void)
 			 }
 		 }
 
-
 //		 if (testStateFlag) {
 //		 steps += incrementStep(percentageYdisplacement);
 //		 }
@@ -161,6 +160,20 @@ void joystick_task(void)
 		 }
 
 		 previousJoyXDirection = xJoyDirection;
+
+
+
+		//-----------------------
+//
+//		 if ()
+//
+//		 if (currDisplayState == GoalProgress || joyStickLongPress == true) {
+//
+//
+//
+//		 }
+
+
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
