@@ -101,9 +101,10 @@ void joystick_task(void)
 		 yJoyDirection = "Up";
 
 		 if (currDisplayState == DistanceTravelled) {
-			 currDistanceDisplayUnits += 1 % 2;
-		 } else if (currDisplayState == DistanceTravelled) {
-			 currDistanceDisplayUnits += 1 % 2;
+			 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
+		 }
+		 if (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) {
+			 stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
 		 }
 
 		 if (testStateFlag) {
@@ -114,28 +115,16 @@ void joystick_task(void)
 	 }
 
 
-
-	 if (x > xdeadZoneUpBound) {
-			xJoyDirection = "Left";
-			currDisplayState = (currDisplayState - 1)%3;
-		 } else if (x < xdeadZoneLowerBound) {
-			 xJoyDirection = "Right";
-			 currDisplayState = (currDisplayState + 1)%3;
-		 } else {
-			 xJoyDirection = "Rest";
-		 }
-
-
-//	     if (percentageYdisplacement >= 55 || percentageYdisplacement <= 45) {
-//
-//	    	 int16_t stepIncrement = calcStepIncrement(percentageYdisplacement);
-//
-//	    	if (steps + stepIncrement < uint16MaxVal) {
-//
-//	    	steps += stepIncrement;
-//	    	}
-//
-//	     }
+	 if (x == 0) return;
+		 if (x > xdeadZoneUpBound) {
+				xJoyDirection = "Left";
+				currDisplayState = (currDisplayState - 1) % 3;
+			 } else if (x < xdeadZoneLowerBound) {
+				 xJoyDirection = "Right";
+				 currDisplayState = (currDisplayState + 2) % 3;
+			 } else {
+				 xJoyDirection = "Rest";
+			 }
 
 }
 

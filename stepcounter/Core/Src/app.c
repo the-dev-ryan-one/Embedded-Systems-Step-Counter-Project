@@ -11,6 +11,7 @@
 #include "adc.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "task_joystick.h"
 #include "task_blinky.h"
@@ -20,9 +21,7 @@
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 #include "ssd1306_conf.h"
-
 #include "usart.h"
-
 #include "tim.h"
 #include "pwm.h"
 
@@ -47,19 +46,19 @@ static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
-static uint32_t SW2PressesResetNextRun = 0;
+//static uint32_t SW2PressesResetNextRun = 0;
 
 bool serialDebugFlag = false;
 bool testStateFlag = false;
 
 // reset Values
-uint16_t stepGoal = 1000;
+uint16_t stepGoal = 100;
 uint16_t steps = 0;
-uint16_t distanceTravelled = 0;
-
 
 displayState currDisplayState = CurrentSteps;
-distanceDisplayUnits currDistanceDisplayUnits = km;
+
+bool distanceDisplayUnitsFlag = false;
+bool stepDisplayUnitsFlag = false;
 
 void app_main(void) {
 
@@ -92,23 +91,14 @@ void app_main(void) {
     	  {
     		buttons_update();
     		button_task_execute();
-
     		ButtonNextRun += BUTTON_PERIOD_TICKS;
     	  }
 
     	  if (ticks > JoystickNextRun)
 			  {
-
 				joystick_task();
 				JoystickNextRun += JOYSTICK_PERIOD_TICKS;
-
 			  }
-
-//    	  if (ticks > SW2PressesResetNextRun) {
-//    		  resetSW2PressesAfterDelay();
-//    		  SW2PressesResetNextRun += SW2RESET_PERIOD_TICKS;
-//    	  }
-
     	}
 
 }

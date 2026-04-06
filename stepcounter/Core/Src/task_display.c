@@ -19,91 +19,66 @@
 
 char buffer[32];
 
-void printInputToScreen(uint8_t line , char* inputStr , uint16_t valToPrint ) {
-
-//	char buffer[32];
-
-	ssd1306_SetCursor(0, (line*16));
-	snprintf(buffer, sizeof(buffer), inputStr, valToPrint);
-	ssd1306_WriteString(buffer, Font_7x10, White);
-
-}
-
 void displayCurrentSteps(void) {
 
-	ssd1306_SetCursor(16, 16);
-	snprintf(buffer, sizeof(buffer), "Steps: %u", steps);
-	ssd1306_WriteString(buffer, Font_7x10, White);
-	ssd1306_SetCursor(16, 32);
-	snprintf(buffer, sizeof(buffer), "Units: %u", steps);
+	ssd1306_SetCursor(0, 6);
+	snprintf(buffer, sizeof(buffer), "Current Steps");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
+	ssd1306_SetCursor(0, 22);
+
+	if (stepDisplayUnitsFlag) {
+		snprintf(buffer, sizeof(buffer), "%u steps", steps);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+	} else {
+		uint8_t goalPercentage = (uint32_t)steps * 100 / stepGoal;
+		snprintf(buffer, sizeof(buffer), "goalPercentage %u" , goalPercentage);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+	}
+
 }
+
 
 void displayGoalProgress(void) {
 
-
-	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "Goal Progress State: %u", steps);
+	ssd1306_SetCursor(0, 6);
+	snprintf(buffer, sizeof(buffer), "Goal Progress");
 	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(0, 22);
+
+	if (stepDisplayUnitsFlag) {
+		snprintf(buffer, sizeof(buffer), "%u steps", steps);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+	} else {
+		uint8_t goalPercentage = (uint32_t)steps * 100 / stepGoal;
+		snprintf(buffer, sizeof(buffer), "goalPercentage %u" , goalPercentage);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+	}
 
 }
 
 void displayDistanceTravelled(void) {
 
-//	ssd1306_SetCursor(0, 0);
-//	snprintf(buffer, sizeof(buffer), "Distance Traveled: %u", steps);
-//	ssd1306_WriteString(buffer, Font_7x10, White);
-//	ssd1306_SetCursor(0, 16);
+	ssd1306_SetCursor(0, 6);
+	snprintf(buffer, sizeof(buffer), "Distance Traveled");
+	ssd1306_WriteString(buffer, Font_7x10, White);
 
-	switch(currDistanceDisplayUnits)
-		{
-		case km:
-
-			ssd1306_SetCursor(0, 0);
-			snprintf(buffer, sizeof(buffer), "Dist: %u km", steps);
-			ssd1306_WriteString(buffer, Font_7x10, White);
-			break;
-		case yd:
-			ssd1306_SetCursor(0, 0);
-			snprintf(buffer, sizeof(buffer), "Dist: %u yd", steps);
-			ssd1306_WriteString(buffer, Font_7x10, White);
-			break;
-		}
-
+	ssd1306_SetCursor(24, 22);
+	uint32_t distInCm = (uint32_t)steps * 80;
+	if (distanceDisplayUnitsFlag) {
+		uint32_t distWholeComponent = distInCm/100000;
+		uint32_t distFractComponent = (distInCm % 100000)/1000;
+		snprintf(buffer, sizeof(buffer), "%lu.%03lu km", distWholeComponent , distFractComponent);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+	} else {
+		uint32_t disInYards = distInCm * 1094 / 100000;
+		snprintf(buffer, sizeof(buffer), "%lu yds", disInYards);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+	}
 }
 
 void display_task_execute(void) {
-
-
-//	ssd1306_Fill(Black);
-//
-//
-//    ssd1306_SetCursor(0, 0);
-//    snprintf(buffer, sizeof(buffer), "Joy X : %s %u", xJoyDirection , percentageXdisplacement);
-//    ssd1306_WriteString(buffer, Font_7x10, White);
-//
-//    if (serialDebugFlag) {
-//
-//    	snprintf(buffer, sizeof(buffer), "Joy X : %s %u", xJoyDirection , x);
-//
-//        HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-//        HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
-//    }
-//
-//
-//    ssd1306_SetCursor(0, 16);
-//    snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", yJoyDirection , percentageYdisplacement);
-//    ssd1306_WriteString(buffer, Font_7x10, White);
-//    ssd1306_UpdateScreen();
-//
-//
-//    printInputToScreen(2, "Step Goal: %u", stepGoal);
-//
-//	ssd1306_SetCursor(0, 48);
-//	snprintf(buffer, sizeof(buffer), "steps:%u,dist:%u", steps, distance);
-//	ssd1306_WriteString(buffer, Font_7x10, White);
-//	ssd1306_UpdateScreen();
 
 	ssd1306_Fill(Black);
 
@@ -122,12 +97,16 @@ void display_task_execute(void) {
 
 	ssd1306_UpdateScreen();
 
-
-
     if (serialDebugFlag) {
+
+    	snprintf(buffer, sizeof(buffer), "Joy X : %s %u", xJoyDirection , x);
+
+    	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+    	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
     	snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", yJoyDirection , y);
         HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
         HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
     }
+
 }
