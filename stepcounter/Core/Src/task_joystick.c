@@ -67,9 +67,11 @@ int16_t incrementStep(uint16_t percentageYdisplacement) {
 
 void joystick_task(void)
 {
+	static char* previousJoyXDirection = "Rest";
+	static char* previousJoyYDirection = "Rest";
+
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
 
-	//-----------
 	x = getJoyStickX();
 	y = getJoyStickY();
 
@@ -97,35 +99,56 @@ void joystick_task(void)
 	 if (y > ydeadZoneUpBound) {
 		 yJoyDirection = "Down";
 
-	 } else if (y < ydeadZoneLowerBound) {
-		 yJoyDirection = "Up";
-
-		 if (currDisplayState == DistanceTravelled) {
-			 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
-		 }
-		 if (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) {
-			 stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
-		 }
-
-		 if (testStateFlag) {
-		 steps += incrementStep(percentageYdisplacement);
-		 }
-	 } else {
-		 yJoyDirection = "Rest";
 	 }
+
+	 if (y < ydeadZoneLowerBound) {
+
+		 yJoyDirection = "Up";
+		 if (previousJoyYDirection == "Rest") {
+
+			 if (currDisplayState == DistanceTravelled) {
+				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
+			 }
+			 if (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) {
+				 stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
+			 }
+		 }
+
+
+//		 if (testStateFlag) {
+//		 steps += incrementStep(percentageYdisplacement);
+//		 }
+
+		 } else {
+			 yJoyDirection = "Rest";
+		 }
+
+	 previousJoyYDirection = yJoyDirection;
 
 
 	 if (x == 0) return;
 		 if (x > xdeadZoneUpBound) {
-				xJoyDirection = "Left";
-				currDisplayState = (currDisplayState - 1) % 3;
-			 } else if (x < xdeadZoneLowerBound) {
-				 xJoyDirection = "Right";
-				 currDisplayState = (currDisplayState + 2) % 3;
+
+			xJoyDirection = "Left";
+			if (previousJoyXDirection == "Rest") {
+
+			currDisplayState = (currDisplayState + 2) % 3;
+			}
+
+			 }
+
+		 	 if (x < xdeadZoneLowerBound) {
+
+			 xJoyDirection = "Right";
+			 if (previousJoyXDirection == "Rest") {
+				 currDisplayState = (currDisplayState + 1) % 3;
+			 }
+
 			 } else {
 				 xJoyDirection = "Rest";
 			 }
 
+		 previousJoyXDirection = xJoyDirection;
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
