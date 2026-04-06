@@ -80,26 +80,60 @@ uint32_t incrementSteps(uint16_t percentageYdisplacement) {
 
 }
 
+//void testModeJoyStickTask(void) {
+//
+//	if (y > ydeadZoneUpBound) {
+//
+//		if (testStateFlag) {
+//			uint16_t decrementVal = incrementSteps(percentageYdisplacement);
+//			if ( steps >= decrementVal ) {
+//				steps -= decrementVal;
+//			}
+//		}
+//	}
+//
+//	if (y < ydeadZoneLowerBound) {
+//
+//		 if (testStateFlag) {
+//			 uint16_t incrementVal = incrementSteps(percentageYdisplacement);
+//			 if ( (steps + incrementVal) <= (stepGoal - 10) ) {
+//			 steps += incrementVal;
+//			 }
+//		 }
+//	}
+//
+//}
+
 void testModeJoyStickTask(void) {
 
-	if (y > ydeadZoneUpBound) {
+	if (!testStateFlag) return;
+	uint32_t incrementVal = 0;
 
-		if (testStateFlag) {
-			uint16_t decrementVal = incrementSteps(percentageYdisplacement);
-			if ( steps >= decrementVal ) {
-				steps -= decrementVal;
-			}
-		}
+	if (percentageYdisplacement < 35) {
+	        incrementVal = 1;
+	    } else if (percentageYdisplacement < 50) {
+	        incrementVal = 5;
+	    } else if (percentageYdisplacement < 65) {
+	        incrementVal = 10;
+	    } else if (percentageYdisplacement < 80) {
+	        incrementVal = 100;
+	    } else if (percentageYdisplacement < 90) {
+	        incrementVal = 500;
+	    } else {
+	        incrementVal = 1000;
+	    }
+
+
+	if (y > ydeadZoneUpBound) {
+		if (steps >= incrementVal)
+			steps -=  incrementVal;
 	}
 
 	if (y < ydeadZoneLowerBound) {
+		if ((steps + incrementVal) <= (stepGoal - 10)) {
+			steps += incrementVal;
+		}
 
-		 if (testStateFlag) {
-			 uint16_t incrementVal = incrementSteps(percentageYdisplacement);
-			 if ( (steps + incrementVal) <= (stepGoal - 10) ) {
-			 steps += incrementVal;
-			 }
-		 }
 	}
 
 }
@@ -234,6 +268,8 @@ void joystick_task(void)
 
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
 
+//	percentageXdisplacement = calcPercentageXDisplacement();
+//	percentageYdisplacement = calcPercentageYDisplacement();
 	percentageXdisplacement = calcPercentageXDisplacement();
 	percentageYdisplacement = calcPercentageYDisplacement();
 
@@ -241,13 +277,17 @@ void joystick_task(void)
 	setJoyYDirection();
 
 	toggleUnits();
+
 	cycleDisplayStates();
 	handleJoyLongPress();
+
+	if (testStateFlag) {
+		testModeJoyStickTask();
+	}
 
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
-
 
 
 }
