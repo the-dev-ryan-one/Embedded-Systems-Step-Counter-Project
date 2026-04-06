@@ -6,6 +6,7 @@
  * Date: 2026
  */
 
+#include <string.h>
 
 #include "adc.h"
 #include "app.h"
@@ -65,13 +66,6 @@ uint16_t getRawPotentiometerVal  (void) {
 	return raw_adc[2];
 }
 
-//int16_t incrementStep(uint16_t percentageYdisplacement) {
-//
-//	float coeffcient = (float)(percentageYdisplacement / 100.0);
-//	int16_t toReturn = (int16_t)MAX_STEP_INCREMENT * coeffcient;
-//	return toReturn;
-//
-//}
 
 void potentiometer_task(void) {
 
@@ -170,9 +164,9 @@ void setJoyXDirection() {
 
 void toggleUnits(void) {
 
-	if (yJoyDirection == "Up") {
+	if (strcmp(yJoyDirection, "Up") == 0) {
 
-		 if (previousJoyYDirection == "Rest") {
+		 if (strcmp(previousJoyYDirection, "Rest") == 0) {
 
 			 if (currDisplayState == DistanceTravelled) {
 				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
@@ -196,7 +190,7 @@ void cycleDisplayStates(void) {
 		 if (x > xdeadZoneUpBound) {
 
 			xJoyDirection = "Left";
-			if (previousJoyXDirection == "Rest") {
+			if (strcmp(previousJoyXDirection, "Rest") == 0) {
 
 			currDisplayState = (currDisplayState + 2) % 3;
 			}
@@ -206,7 +200,7 @@ void cycleDisplayStates(void) {
 		 else if (x < xdeadZoneLowerBound) {
 
 		 xJoyDirection = "Right";
-		 if (previousJoyXDirection == "Rest") {
+		 if (strcmp(previousJoyXDirection, "Rest") == 0) {
 			 currDisplayState = (currDisplayState + 1) % 3;
 		 }
 
