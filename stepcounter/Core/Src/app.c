@@ -34,25 +34,34 @@
 #define JOYSTICK_FREQUENCY_HZ 56
 #define DISPLAY_FREQUENCY_HZ 4
 #define SW2RESET_FREQUENCY_HZ 1
+#define POTENTIOMETER_FREQUENCY_HZ 30
 
+#define BLINKY_PERIOD_TICKS       HZ_TO_TICKS(BLINKY_FREQUENCY_HZ)
+#define BUTTON_PERIOD_TICKS       HZ_TO_TICKS(BUTTON_FREQUENCY_HZ)
+#define JOYSTICK_PERIOD_TICKS     HZ_TO_TICKS(JOYSTICK_FREQUENCY_HZ)
+#define DISPLAY_PERIOD_TICKS      HZ_TO_TICKS(DISPLAY_FREQUENCY_HZ)
+#define SW2RESET_PERIOD_TICKS     HZ_TO_TICKS(SW2RESET_FREQUENCY_HZ)
+#define POTENTIOMETER_PERIOD_TICKS HZ_TO_TICKS(POTENTIOMETER_FREQUENCY_HZ)
 
-#define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
-#define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
-#define JOYSTICK_PERIOD_TICKS (TICK_FREQUENCY_HZ/JOYSTICK_FREQUENCY_HZ)
-#define DISPLAY_PERIOD_TICKS (TICK_FREQUENCY_HZ/DISPLAY_FREQUENCY_HZ)
-#define SW2RESET_PERIOD_TICKS (TICK_FREQUENCY_HZ/SW2RESET_FREQUENCY_HZ)
+//#define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
+//#define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
+//#define JOYSTICK_PERIOD_TICKS (TICK_FREQUENCY_HZ/JOYSTICK_FREQUENCY_HZ)
+//#define DISPLAY_PERIOD_TICKS (TICK_FREQUENCY_HZ/DISPLAY_FREQUENCY_HZ)
+//#define SW2RESET_PERIOD_TICKS (TICK_FREQUENCY_HZ/SW2RESET_FREQUENCY_HZ)
+//#define POTENTIOMETER_PERIOD_TICKS (TICK_FREQUENCY_HZ/POTENTIOMETER_FREQUENCY_HZ)
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
+static uint32_t PotentiometerNextRun = 0;
 //static uint32_t SW2PressesResetNextRun = 0;
 
 bool serialDebugFlag = false;
 bool testStateFlag = false;
 
 // reset Values
-uint16_t stepGoal = 100;
+uint16_t stepGoal = 1000;
 uint16_t steps = 0;
 
 displayState currDisplayState = CurrentSteps;
@@ -66,6 +75,7 @@ void app_main(void) {
 	ButtonNextRun = HAL_GetTick() + BUTTON_PERIOD_TICKS;
 	JoystickNextRun = HAL_GetTick() + JOYSTICK_PERIOD_TICKS;
 	DisplayNextRun = HAL_GetTick() + DISPLAY_PERIOD_TICKS;
+	PotentiometerNextRun = HAL_GetTick() + POTENTIOMETER_PERIOD_TICKS;
 
 	buttons_init();
 	ssd1306_Init();
@@ -99,6 +109,12 @@ void app_main(void) {
 				joystick_task();
 				JoystickNextRun += JOYSTICK_PERIOD_TICKS;
 			  }
+    	  if (ticks > PotentiometerNextRun)
+			  {
+    		  potentiometer_task();
+    		  PotentiometerNextRun += POTENTIOMETER_PERIOD_TICKS;
+			  }
+
     	}
 
 }

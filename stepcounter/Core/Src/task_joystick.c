@@ -35,8 +35,8 @@ char* yJoyDirection = "Rest";
 #define adcRestValX 2203
 #define adcMaxValX 3835
 #define adcMinValX 454
-#define xdeadZoneUpBound 2643
-#define xdeadZoneLowerBound 1762
+#define xdeadZoneUpBound 2864
+#define xdeadZoneLowerBound 1542
 
 #define adcRestValY 2233
 #define adcMaxValY 3900
@@ -56,11 +56,22 @@ uint16_t getJoyStickY (void) {
 	return raw_adc[0];
 }
 
+uint16_t getRawPotentiometerVal  (void) {
+
+	return raw_adc[2];
+}
+
 int16_t incrementStep(uint16_t percentageYdisplacement) {
 
 	float coeffcient = (float)(percentageYdisplacement / 100.0);
 	int16_t toReturn = (int16_t)MAX_STEP_INCREMENT * coeffcient;
 	return toReturn;
+
+}
+
+void potentiometer_task(void) {
+
+	getRawPotentiometerVal();
 
 }
 
@@ -127,6 +138,7 @@ void joystick_task(void)
 
 
 	 if (x == 0) return;
+
 		 if (x > xdeadZoneUpBound) {
 
 			xJoyDirection = "Left";
@@ -135,18 +147,18 @@ void joystick_task(void)
 			currDisplayState = (currDisplayState + 2) % 3;
 			}
 
-			 }
+			}
 
-		 	 if (x < xdeadZoneLowerBound) {
+		 else if (x < xdeadZoneLowerBound) {
 
-			 xJoyDirection = "Right";
-			 if (previousJoyXDirection == "Rest") {
-				 currDisplayState = (currDisplayState + 1) % 3;
-			 }
+		 xJoyDirection = "Right";
+		 if (previousJoyXDirection == "Rest") {
+			 currDisplayState = (currDisplayState + 1) % 3;
+		 }
 
-			 } else {
-				 xJoyDirection = "Rest";
-			 }
+		 } else {
+			 xJoyDirection = "Rest";
+		 }
 
 		 previousJoyXDirection = xJoyDirection;
 }

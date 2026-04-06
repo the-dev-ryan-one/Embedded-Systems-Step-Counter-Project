@@ -32,7 +32,7 @@ void displayCurrentSteps(void) {
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	} else {
 		uint8_t goalPercentage = (uint32_t)steps * 100 / stepGoal;
-		snprintf(buffer, sizeof(buffer), "goalPercentage %u" , goalPercentage);
+		snprintf(buffer, sizeof(buffer), "%u %%" , goalPercentage);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	}
 
@@ -52,7 +52,7 @@ void displayGoalProgress(void) {
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	} else {
 		uint8_t goalPercentage = (uint32_t)steps * 100 / stepGoal;
-		snprintf(buffer, sizeof(buffer), "goalPercentage %u" , goalPercentage);
+		snprintf(buffer, sizeof(buffer), "%u %%" , goalPercentage);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	}
 
