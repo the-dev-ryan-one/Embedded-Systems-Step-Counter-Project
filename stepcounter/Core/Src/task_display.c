@@ -93,8 +93,21 @@ void display_task_execute(void) {
 
 		ssd1306_UpdateScreen();
 		return;
-
 	}
+
+//	if(testStateFlag) {
+//			ssd1306_SetCursor(0, 0);
+//			snprintf(buffer, sizeof(buffer), "-----Test Mode-----" );
+//			ssd1306_WriteString(buffer, Font_7x10, White);
+//
+//			ssd1306_SetCursor(0, 26);
+//			snprintf(buffer, sizeof(buffer), "   [ steps: %u ]  " , steps );
+//			ssd1306_WriteString(buffer, Font_7x10, White);
+//
+//			ssd1306_UpdateScreen();
+//			return;
+//
+//	}
 
 	switch(currDisplayState)
 	{

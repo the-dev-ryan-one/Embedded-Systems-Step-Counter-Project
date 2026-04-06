@@ -62,18 +62,48 @@ uint16_t getRawPotentiometerVal  (void) {
 	return raw_adc[2];
 }
 
-int16_t incrementStep(uint16_t percentageYdisplacement) {
-
-	float coeffcient = (float)(percentageYdisplacement / 100.0);
-	int16_t toReturn = (int16_t)MAX_STEP_INCREMENT * coeffcient;
-	return toReturn;
-
-}
+//int16_t incrementStep(uint16_t percentageYdisplacement) {
+//
+//	float coeffcient = (float)(percentageYdisplacement / 100.0);
+//	int16_t toReturn = (int16_t)MAX_STEP_INCREMENT * coeffcient;
+//	return toReturn;
+//
+//}
 
 void potentiometer_task(void) {
 
 	rawPotVal = getRawPotentiometerVal();
 
+
+}
+
+uint32_t incrementSteps(uint16_t percentageYdisplacement) {
+
+	return (percentageYdisplacement * percentageYdisplacement * percentageYdisplacement) / 670;
+
+}
+
+void testModeJoyStickTask(void) {
+
+	if (y > ydeadZoneUpBound) {
+
+		if (testStateFlag) {
+			uint16_t decrementVal = incrementSteps(percentageYdisplacement);
+			if ( steps >= decrementVal ) {
+				steps -= decrementVal;
+			}
+		}
+	}
+
+	if (y < ydeadZoneLowerBound) {
+
+		 if (testStateFlag) {
+			 uint16_t incrementVal = incrementSteps(percentageYdisplacement);
+			 if ( (steps + incrementVal) <= (stepGoal - 10) ) {
+			 steps += incrementVal;
+			 }
+		 }
+	}
 
 }
 
@@ -115,14 +145,14 @@ void joystick_task(void)
 	 }
 
 	 if (y < ydeadZoneLowerBound) {
-
 		 yJoyDirection = "Up";
+
 		 if (previousJoyYDirection == "Rest") {
 
 			 if (currDisplayState == DistanceTravelled) {
 				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
 			 }
-			 if (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) {
+			 if (!testStateFlag && (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) ) {
 				 stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
 			 }
 		 }
@@ -178,6 +208,8 @@ void joystick_task(void)
 		 } else {
 			 joyStickPressCounter = 0;
 		 }
+
+
 
 }
 

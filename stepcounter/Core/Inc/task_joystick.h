@@ -28,6 +28,8 @@ extern uint16_t rawPotVal;
 /* Runs the joystick task , reads the ADC values from the joystick */
 void joystick_task(void);
 
+void testModeJoyStickTask(void);
+
 /* Returns the last read X axis value from the joystick */
 uint16_t getJoyStickX (void);
 

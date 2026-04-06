@@ -35,6 +35,7 @@
 #define DISPLAY_FREQUENCY_HZ 4
 #define SW2RESET_FREQUENCY_HZ 1
 #define POTENTIOMETER_FREQUENCY_HZ 30
+#define TESTMODE_FREQUENCY_HZ 2
 
 #define BLINKY_PERIOD_TICKS       HZ_TO_TICKS(BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS       HZ_TO_TICKS(BUTTON_FREQUENCY_HZ)
@@ -42,22 +43,16 @@
 #define DISPLAY_PERIOD_TICKS      HZ_TO_TICKS(DISPLAY_FREQUENCY_HZ)
 #define SW2RESET_PERIOD_TICKS     HZ_TO_TICKS(SW2RESET_FREQUENCY_HZ)
 #define POTENTIOMETER_PERIOD_TICKS HZ_TO_TICKS(POTENTIOMETER_FREQUENCY_HZ)
-
-//#define BLINKY_PERIOD_TICKS (TICK_FREQUENCY_HZ/BLINKY_FREQUENCY_HZ)
-//#define BUTTON_PERIOD_TICKS (TICK_FREQUENCY_HZ/BUTTON_FREQUENCY_HZ)
-//#define JOYSTICK_PERIOD_TICKS (TICK_FREQUENCY_HZ/JOYSTICK_FREQUENCY_HZ)
-//#define DISPLAY_PERIOD_TICKS (TICK_FREQUENCY_HZ/DISPLAY_FREQUENCY_HZ)
-//#define SW2RESET_PERIOD_TICKS (TICK_FREQUENCY_HZ/SW2RESET_FREQUENCY_HZ)
-//#define POTENTIOMETER_PERIOD_TICKS (TICK_FREQUENCY_HZ/POTENTIOMETER_FREQUENCY_HZ)
+#define TESTMODE_PERIOD_TICKS HZ_TO_TICKS(TESTMODE_FREQUENCY_HZ)
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
 static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
 static uint32_t PotentiometerNextRun = 0;
-//static uint32_t SW2PressesResetNextRun = 0;
-bool inSetGoalState = false;
+static uint32_t TestModeNextRun = 0;
 
+bool inSetGoalState = false;
 bool serialDebugFlag = false;
 bool testStateFlag = false;
 
@@ -77,6 +72,7 @@ void app_main(void) {
 	JoystickNextRun = HAL_GetTick() + JOYSTICK_PERIOD_TICKS;
 	DisplayNextRun = HAL_GetTick() + DISPLAY_PERIOD_TICKS;
 	PotentiometerNextRun = HAL_GetTick() + POTENTIOMETER_PERIOD_TICKS;
+	TestModeNextRun = HAL_GetTick() + TESTMODE_PERIOD_TICKS;
 
 	buttons_init();
 	ssd1306_Init();
@@ -115,6 +111,12 @@ void app_main(void) {
     		  potentiometer_task();
     		  PotentiometerNextRun += POTENTIOMETER_PERIOD_TICKS;
 			  }
+
+    	  if (ticks > TestModeNextRun)
+    	  {
+    		  testModeJoyStickTask();
+    	      TestModeNextRun += TESTMODE_PERIOD_TICKS;
+    	  }
 
     	}
 
