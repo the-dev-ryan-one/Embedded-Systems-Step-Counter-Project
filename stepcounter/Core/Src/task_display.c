@@ -82,6 +82,20 @@ void display_task_execute(void) {
 
 	ssd1306_Fill(Black);
 
+	if (inSetGoalState) {
+		ssd1306_SetCursor(0, 0);
+		snprintf(buffer, sizeof(buffer), "-----Set Goal-----" );
+		ssd1306_WriteString(buffer, Font_7x10, White);
+
+		ssd1306_SetCursor(0, 16);
+		snprintf(buffer, sizeof(buffer), "%u", rawPotVal);
+		ssd1306_WriteString(buffer, Font_7x10, White);
+
+		ssd1306_UpdateScreen();
+		return;
+
+	}
+
 	switch(currDisplayState)
 	{
 	case CurrentSteps:

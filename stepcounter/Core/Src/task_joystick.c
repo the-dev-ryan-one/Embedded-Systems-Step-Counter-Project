@@ -24,6 +24,7 @@ uint16_t minYValue = 706;
 uint16_t currYVal;
 uint16_t x;
 uint16_t y;
+uint16_t rawPotVal;
 
 char* xJoyDirection = "Rest";
 char* yJoyDirection = "Rest";
@@ -71,7 +72,8 @@ int16_t incrementStep(uint16_t percentageYdisplacement) {
 
 void potentiometer_task(void) {
 
-	getRawPotentiometerVal();
+	rawPotVal = getRawPotentiometerVal();
+
 
 }
 
@@ -164,15 +166,18 @@ void joystick_task(void)
 
 
 		//-----------------------
-//
-//		 if ()
-//
-//		 if (currDisplayState == GoalProgress || joyStickLongPress == true) {
-//
-//
-//
-//		 }
+		 static uint16_t joyStickPressCounter;
+		 static bool joyStickLongPress = false;
 
+		 if (currDisplayState == GoalProgress && HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
+			 joyStickPressCounter++;
+			 if (joyStickPressCounter >= 56) {
+				 joyStickLongPress = true;
+				 inSetGoalState = true;
+			 }
+		 } else {
+			 joyStickPressCounter = 0;
+		 }
 
 }
 

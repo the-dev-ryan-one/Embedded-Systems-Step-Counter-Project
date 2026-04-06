@@ -56,6 +56,7 @@ static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
 static uint32_t PotentiometerNextRun = 0;
 //static uint32_t SW2PressesResetNextRun = 0;
+bool inSetGoalState = false;
 
 bool serialDebugFlag = false;
 bool testStateFlag = false;

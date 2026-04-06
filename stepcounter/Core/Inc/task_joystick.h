@@ -15,6 +15,8 @@ extern uint16_t minXValue;
 extern uint16_t maxYValue;
 extern uint16_t minYValue;
 
+extern uint16_t rawPotVal;
+
 
 /*
  * task_joystick.h

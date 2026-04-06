@@ -26,6 +26,7 @@ typedef enum {
 extern bool distanceDisplayUnitsFlag;
 extern bool stepDisplayUnitsFlag;
 extern displayState currDisplayState;
+extern bool inSetGoalState;
 
 /* main application */
 void app_main(void);
