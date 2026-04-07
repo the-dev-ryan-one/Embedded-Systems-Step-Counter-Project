@@ -23,21 +23,21 @@ uint16_t rawPotVal;
 
 #define uint16MaxVal 65535
 
-typedef enum {
-
-	LEFT = 0,
-	RIGHT,
-	UP,
-	DOWN,
-	REST
-
-} joyStickDirections;
+//typedef enum {
+//
+//	LEFT = 0,
+//	RIGHT,
+//	UP,
+//	DOWN,
+//	REST
+//
+//} joyStickDirections;
 
 static currJoyStickState joyStick = {
-    .xJoyDirection = REST,
-    .yJoyDirection = REST,
-    .previousJoyXDirection = REST,
-    .previousJoyYDirection = REST
+    .xJoyDirection = JOY_REST,
+    .yJoyDirection = JOY_REST,
+    .previousJoyXDirection = JOY_REST,
+    .previousJoyYDirection = JOY_REST
 };
 
 
@@ -88,7 +88,7 @@ void potentiometer_task(void) {
 
 uint32_t incrementSteps(uint16_t percentageYdisplacement) {
 
-	return (percentageYdisplacement * joyStick.percentageYdisplacement * joyStick.percentageYdisplacement) / 670;
+	return (joyStick.percentageYdisplacement * joyStick.percentageYdisplacement * joyStick.percentageYdisplacement) / 670;
 
 }
 
@@ -123,7 +123,7 @@ void testModeJoyStickTask(void) {
 //	        incrementVal = 15;
 //	    }
 
-	float normalisedDisplacement = (float)(joyStick.percentageXdisplacement)/100.0f;
+	float normalisedDisplacement = (float)(joyStick.percentageYdisplacement)/100.0f;
 	int32_t incrementVal = (int32_t)(normalisedDisplacement * normalisedDisplacement * normalisedDisplacement * MAX_STEP_INCREMENT);
 	if (incrementVal < 1.0) {
 		incrementVal = 1.0;
@@ -179,46 +179,46 @@ uint16_t calcPercentageYDisplacement(void) {
 	joyStick.y = getJoyStickY();
 
 	if (joyStick.y > adcRestValY) {
-		joyStick.percentageXdisplacement = (joyStick.y - adcRestValY)*100 / (adcMaxValY - adcRestValY);
+		joyStick.percentageYdisplacement = (joyStick.y - adcRestValY)*100 / (adcMaxValY - adcRestValY);
 		} else {
-		joyStick.percentageXdisplacement = (adcRestValY - joyStick.y)*100 / (adcRestValY - adcMinValY);
+		joyStick.percentageYdisplacement = (adcRestValY - joyStick.y)*100 / (adcRestValY - adcMinValY);
 		}
 
-		if (joyStick.percentageXdisplacement > 100) {
-				joyStick.percentageXdisplacement = 100;
+		if (joyStick.percentageYdisplacement > 100) {
+				joyStick.percentageYdisplacement = 100;
 		}
 
-	return joyStick.percentageXdisplacement;
+	return joyStick.percentageYdisplacement;
 
 }
 
 void setJoyYDirection() {
 	if (joyStick.y < ydeadZoneLowerBound) {
-			joyStick.yJoyDirection = UP;
+			joyStick.yJoyDirection = JOY_UP;
 	}
 	else if (joyStick.y > ydeadZoneUpBound) {
-			 joyStick.yJoyDirection = DOWN;
+			 joyStick.yJoyDirection = JOY_DOWN;
 	} else {
-		joyStick.yJoyDirection = REST;
+		joyStick.yJoyDirection = JOY_REST;
 	}
 }
 
 void setJoyXDirection() {
 
 	 if (joyStick.x > xdeadZoneUpBound) {
-	        joyStick.xJoyDirection = LEFT;
+	        joyStick.xJoyDirection = JOY_LEFT;
 	    } else if (joyStick.x < xdeadZoneLowerBound) {
-	        joyStick.xJoyDirection = RIGHT;
+	        joyStick.xJoyDirection = JOY_RIGHT;
 	    } else {
-	        joyStick.xJoyDirection = REST;
+	        joyStick.xJoyDirection = JOY_REST;
 	    }
 }
 
 void toggleUnits(void) {
 
-	if (joyStick.yJoyDirection == UP) {
+	if (joyStick.yJoyDirection == JOY_UP) {
 
-		 if (joyStick.previousJoyYDirection == REST) {
+		 if (joyStick.previousJoyYDirection == JOY_REST) {
 
 			 if (currDisplayState == DistanceTravelled) {
 				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
@@ -229,7 +229,7 @@ void toggleUnits(void) {
 		 }
 
 		 } else {
-			 joyStick.yJoyDirection = REST;
+			 joyStick.yJoyDirection = JOY_REST;
 		 }
 
 	joyStick.previousJoyYDirection = joyStick.yJoyDirection;
@@ -241,8 +241,8 @@ void cycleDisplayStates(void) {
 
 		 if (joyStick.x > xdeadZoneUpBound) {
 
-			joyStick.xJoyDirection = LEFT;
-			if (joyStick.previousJoyXDirection == REST) {
+			joyStick.xJoyDirection = JOY_LEFT;
+			if (joyStick.previousJoyXDirection == JOY_REST) {
 
 			currDisplayState = (currDisplayState + 2) % 3;
 			}
@@ -251,13 +251,13 @@ void cycleDisplayStates(void) {
 
 		 else if (joyStick.x < xdeadZoneLowerBound) {
 
-		 joyStick.xJoyDirection = RIGHT;
-		 if (joyStick.previousJoyXDirection == REST) {
+		 joyStick.xJoyDirection = JOY_RIGHT;
+		 if (joyStick.previousJoyXDirection == JOY_REST) {
 			 currDisplayState = (currDisplayState + 1) % 3;
 		 }
 
 		 } else {
-			 joyStick.xJoyDirection = REST;
+			 joyStick.xJoyDirection = JOY_REST;
 		 }
 
 		 joyStick.previousJoyXDirection = joyStick.xJoyDirection;
@@ -294,7 +294,7 @@ void joystick_task(void)
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 3);
 
 	joyStick.percentageXdisplacement = calcPercentageXDisplacement();
-	joyStick.percentageXdisplacement = calcPercentageYDisplacement();
+	joyStick.percentageYdisplacement = calcPercentageYDisplacement();
 
 	setJoyXDirection();
 	setJoyYDirection();

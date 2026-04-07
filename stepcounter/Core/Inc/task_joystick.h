@@ -10,19 +10,29 @@ extern uint16_t minYValue;
 
 extern uint16_t rawPotVal;
 
+
+typedef enum {
+
+	JOY_LEFT = 0,
+	JOY_RIGHT,
+	JOY_UP,
+	JOY_DOWN,
+	JOY_REST
+
+} joyStickDirections;
+
 typedef struct {
 
 	uint16_t x;
 	uint16_t y;
 	uint16_t percentageXdisplacement;
 	uint16_t percentageYdisplacement;
-	char* xJoyDirection;
-	char* yJoyDirection;
-	char* previousJoyXDirection;
-	char* previousJoyYDirection;
+	joyStickDirections xJoyDirection;
+	joyStickDirections yJoyDirection;
+	joyStickDirections previousJoyXDirection;
+	joyStickDirections previousJoyYDirection;
 
 } currJoyStickState;
-
 
 static currJoyStickState joyStick;
 
