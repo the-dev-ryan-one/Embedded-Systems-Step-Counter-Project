@@ -216,6 +216,9 @@ void setJoyXDirection() {
 
 void toggleUnits(void) {
 
+	if (inSetGoalState) return;
+	if (testStateFlag) return;
+
 	if (joyStick.yJoyDirection == JOY_UP) {
 
 		 if (joyStick.previousJoyYDirection == JOY_REST) {
@@ -236,6 +239,8 @@ void toggleUnits(void) {
 }
 
 void cycleDisplayStates(void) {
+
+	if (inSetGoalState) return;
 
 	if (joyStick.x == 0) return;
 

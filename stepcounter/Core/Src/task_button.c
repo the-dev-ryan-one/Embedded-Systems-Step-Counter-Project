@@ -14,7 +14,7 @@
 #include "task_button.h"
 
 static uint8_t dutyCycle = 0;
-#define SW2PressWindow 500
+#define SW2PressWindow 700
 static uint8_t consecutiveSW2Presses = 0;
 static uint32_t firstSW2press = 0;
 
@@ -36,6 +36,8 @@ void SW1PressEvent(void) {
 
 void button_task_execute(void)
 {
+	if (inSetGoalState) return;
+
 	rgb_colour_all_on();
 
 	if (buttons_checkButton (LEFT) == PUSHED) {
@@ -58,20 +60,29 @@ void button_task_execute(void)
 	    	serialDebugFlag = !serialDebugFlag;
 
 	    	consecutiveSW2Presses++;
+	    	char* pressType;
 
 	    	if (consecutiveSW2Presses == 1) {
 	    		firstSW2press = HAL_GetTick();
+	    		pressType = "shortPress";
 	    	}
 
 	    	if (consecutiveSW2Presses >= 2 && HAL_GetTick() <= (firstSW2press+SW2PressWindow) ) {
 	    		testStateFlag = !testStateFlag;
-	    		consecutiveSW2Presses = 0;
+//	    		consecutiveSW2Presses = 0;
+//	    		pressType = "longPress";
 	    	} else if (HAL_GetTick() > (firstSW2press+SW2PressWindow)) {
 	    		consecutiveSW2Presses = 1;
 	    		firstSW2press = HAL_GetTick();
 	    	}
 
-
+	    	if (strcmp(pressType, "longPress") == 0) {
+	    		testStateFlag = !testStateFlag;
+	    		consecutiveSW2Presses = 0;
+	    		stepGoal = newGoal;
+	    	} else if (strcmp(pressType, "longPress") == 0) {
+	    		testStateFlag = !testStateFlag;
+	    	}
 
 
 	    }
