@@ -80,6 +80,8 @@ void displayDistanceTravelled(void) {
 
 void display_task_execute(void) {
 
+	const currJoyStickState* joyStick = getCurrJoyStickState();
+
 	ssd1306_Fill(Black);
 
 	if (inSetGoalState) {
@@ -126,12 +128,12 @@ void display_task_execute(void) {
 
     if (serialDebugFlag) {
 
-    	snprintf(buffer, sizeof(buffer), "Joy X : %s %u", xJoyDirection , x);
+    	snprintf(buffer, sizeof(buffer), "Joy X : %s %u", joyStick->xJoyDirection , joyStick->x);
 
     	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
     	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
-    	snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", yJoyDirection , y);
+    	snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", joyStick->yJoyDirection , joyStick->y);
         HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
         HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
     }
