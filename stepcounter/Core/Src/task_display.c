@@ -22,7 +22,7 @@ char buffer[32];
 void displayCurrentSteps(void) {
 
 	ssd1306_SetCursor(0, 6);
-	snprintf(buffer, sizeof(buffer), "Current Steps");
+	snprintf(buffer, sizeof(buffer), "--Current Steps--");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 	ssd1306_SetCursor(0, 22);
@@ -42,7 +42,7 @@ void displayCurrentSteps(void) {
 void displayGoalProgress(void) {
 
 	ssd1306_SetCursor(0, 6);
-	snprintf(buffer, sizeof(buffer), "Goal Progress");
+	snprintf(buffer, sizeof(buffer), "--Goal Progress--");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 	ssd1306_SetCursor(0, 22);
@@ -61,7 +61,7 @@ void displayGoalProgress(void) {
 void displayDistanceTravelled(void) {
 
 	ssd1306_SetCursor(0, 6);
-	snprintf(buffer, sizeof(buffer), "Distance Traveled");
+	snprintf(buffer, sizeof(buffer), " Distance Traveled");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 	ssd1306_SetCursor(24, 22);

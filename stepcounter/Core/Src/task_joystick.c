@@ -36,6 +36,13 @@ static char* previousJoyYDirection = "Rest";
 
 #define uint16MaxVal 65535
 
+//typedef struct {
+//
+//
+//
+//} JoyStickState;
+
+
 #define adcRestValX 2203
 #define adcMaxValX 3835
 #define adcMinValX 454
@@ -49,6 +56,7 @@ static char* previousJoyYDirection = "Rest";
 #define ydeadZoneLowerBound 1786
 
 #define MAX_STEP_INCREMENT 100
+
 
 uint16_t getJoyStickX (void) {
 
