@@ -68,8 +68,16 @@ void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_11;
+  sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_11;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -111,11 +119,18 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     /* ADC1 clock enable */
     __HAL_RCC_ADC_CLK_ENABLE();
 
+    __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
     /**ADC1 GPIO Configuration
+    PA1     ------> ADC1_IN1
     PC4     ------> ADC1_IN11
     PC5     ------> ADC1_IN12
     */
+    GPIO_InitStruct.Pin = GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
     GPIO_InitStruct.Pin = JOYSTICK_X_Pin|JOYSTICK_Y_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -157,9 +172,12 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     __HAL_RCC_ADC_CLK_DISABLE();
 
     /**ADC1 GPIO Configuration
+    PA1     ------> ADC1_IN1
     PC4     ------> ADC1_IN11
     PC5     ------> ADC1_IN12
     */
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1);
+
     HAL_GPIO_DeInit(GPIOC, JOYSTICK_X_Pin|JOYSTICK_Y_Pin);
 
     /* ADC1 DMA DeInit */

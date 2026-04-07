@@ -59,6 +59,7 @@ bool testStateFlag = false;
 // reset Values
 uint16_t stepGoal = 1000;
 uint16_t steps = 0;
+uint16_t newGoal = 500;
 
 displayState currDisplayState = CurrentSteps;
 

@@ -12,7 +12,7 @@
 #include "app.h"
 #include "task_joystick.h"
 
-static uint16_t raw_adc[2];
+static uint16_t raw_adc[3];
 uint16_t percentageXdisplacement = 0;
 uint16_t percentageYdisplacement = 0;
 
@@ -52,17 +52,20 @@ static char* previousJoyYDirection = "Rest";
 
 uint16_t getJoyStickX (void) {
 
-	return raw_adc[1];
+//	return raw_adc[1];
+	return raw_adc[2];
 }
 
 uint16_t getJoyStickY (void) {
 
-	return raw_adc[0];
+//	return raw_adc[0];
+	return raw_adc[1];
 }
 
 uint16_t getRawPotentiometerVal  (void) {
 
-	return raw_adc[2];
+//	return raw_adc[2];
+	return raw_adc[0];
 }
 
 
@@ -70,6 +73,11 @@ void potentiometer_task(void) {
 
 	rawPotVal = getRawPotentiometerVal();
 
+	newGoal = (float)(rawPotVal-130) / (4095.0 - 130.0) * (15000 - 500) + 500;
+	if (rawPotVal < 130) {
+		newGoal = 500;
+	};
+	newGoal = (newGoal/50)*50;
 
 }
 
@@ -277,12 +285,19 @@ void handleJoyLongPress(void) {
 
 	 if (currDisplayState == GoalProgress && HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
 		 joyStickPressCounter++;
-		 if (joyStickPressCounter >= 56) {
+		 if (joyStickPressCounter >= 56 && !joyStickLongPress) {
 			 joyStickLongPress = true;
-			 inSetGoalState = true;
+
+			 if (inSetGoalState) {
+				 stepGoal = newGoal;
+				 inSetGoalState = !inSetGoalState;
+			 } else {
+				 inSetGoalState = !inSetGoalState;
+			 }
 		 }
 	 } else {
 		 joyStickPressCounter = 0;
+		 joyStickLongPress = false;
 	 }
 }
 
@@ -290,7 +305,7 @@ void handleJoyLongPress(void) {
 void joystick_task(void)
 {
 
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 2);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 3);
 
 //	percentageXdisplacement = calcPercentageXDisplacement();
 //	percentageYdisplacement = calcPercentageYDisplacement();

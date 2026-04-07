@@ -88,7 +88,7 @@ void display_task_execute(void) {
 		ssd1306_WriteString(buffer, Font_7x10, White);
 
 		ssd1306_SetCursor(0, 16);
-		snprintf(buffer, sizeof(buffer), "%u", rawPotVal);
+		snprintf(buffer, sizeof(buffer), "%u", newGoal);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 
 		ssd1306_UpdateScreen();

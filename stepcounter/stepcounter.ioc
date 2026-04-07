@@ -1,7 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
 ADC1.IPParameters=NbrOfConversionFlag,master,SelectedChannel
 ADC1.NbrOfConversionFlag=0
-ADC1.SelectedChannel=ADC_CHANNEL_11|ADC_CHANNEL_12
+ADC1.SelectedChannel=ADC_CHANNEL_1|ADC_CHANNEL_11|ADC_CHANNEL_12
 ADC1.master=1
 CAD.formats=
 CAD.pinconfig=
@@ -103,7 +103,8 @@ NVIC.PendSV_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.SVCall_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.SysTick_IRQn=true\:3\:0\:false\:false\:true\:false\:true\:false
 PA1.Locked=true
-PA1.Signal=USART1_RX
+PA1.Mode=IN1
+PA1.Signal=ADC1_IN1
 PA13.Mode=Serial_Wire
 PA13.Signal=DEBUG_SWDIO
 PA14-BOOT0.Mode=Serial_Wire
