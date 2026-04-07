@@ -3,13 +3,6 @@
 #ifndef task_joystick_h
 #define task_joystick_h
 
-//extern uint16_t percentageXdisplacement;
-//extern uint16_t percentageYdisplacement;
-//extern char* xJoyDirection;
-//extern char* yJoyDirection;
-//extern uint16_t currYVal;
-//extern uint16_t x;
-//extern uint16_t y;
 extern uint16_t maxXValue;
 extern uint16_t minXValue;
 extern uint16_t maxYValue;
@@ -29,6 +22,7 @@ typedef struct {
 	char* previousJoyYDirection;
 
 } currJoyStickState;
+
 
 static currJoyStickState joyStick;
 

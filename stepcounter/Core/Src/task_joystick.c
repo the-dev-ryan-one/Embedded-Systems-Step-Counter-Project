@@ -34,10 +34,10 @@ typedef enum {
 } joyStickDirections;
 
 static currJoyStickState joyStick = {
-    .xJoyDirection = "Rest",
-    .yJoyDirection = "Rest",
-    .previousJoyXDirection = "Rest",
-    .previousJoyYDirection = "Rest"
+    .xJoyDirection = REST,
+    .yJoyDirection = REST,
+    .previousJoyXDirection = REST,
+    .previousJoyYDirection = REST
 };
 
 
@@ -194,31 +194,31 @@ uint16_t calcPercentageYDisplacement(void) {
 
 void setJoyYDirection() {
 	if (joyStick.y < ydeadZoneLowerBound) {
-			joyStick.yJoyDirection = "Up";
+			joyStick.yJoyDirection = UP;
 	}
 	else if (joyStick.y > ydeadZoneUpBound) {
-			 joyStick.yJoyDirection = "Down";
+			 joyStick.yJoyDirection = DOWN;
 	} else {
-		joyStick.yJoyDirection = "Rest";
+		joyStick.yJoyDirection = REST;
 	}
 }
 
 void setJoyXDirection() {
 
 	 if (joyStick.x > xdeadZoneUpBound) {
-	        joyStick.xJoyDirection = "Left";
+	        joyStick.xJoyDirection = LEFT;
 	    } else if (joyStick.x < xdeadZoneLowerBound) {
-	        joyStick.xJoyDirection = "Right";
+	        joyStick.xJoyDirection = RIGHT;
 	    } else {
-	        joyStick.xJoyDirection = "Rest";
+	        joyStick.xJoyDirection = REST;
 	    }
 }
 
 void toggleUnits(void) {
 
-	if (strcmp(joyStick.yJoyDirection, "Up") == 0) {
+	if (joyStick.yJoyDirection == UP) {
 
-		 if (strcmp(joyStick.previousJoyYDirection, "Rest") == 0) {
+		 if (joyStick.previousJoyYDirection == REST) {
 
 			 if (currDisplayState == DistanceTravelled) {
 				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
@@ -229,7 +229,7 @@ void toggleUnits(void) {
 		 }
 
 		 } else {
-			 joyStick.yJoyDirection = "Rest";
+			 joyStick.yJoyDirection = REST;
 		 }
 
 	joyStick.previousJoyYDirection = joyStick.yJoyDirection;
@@ -241,8 +241,8 @@ void cycleDisplayStates(void) {
 
 		 if (joyStick.x > xdeadZoneUpBound) {
 
-			joyStick.xJoyDirection = "Left";
-			if (strcmp(joyStick.previousJoyXDirection, "Rest") == 0) {
+			joyStick.xJoyDirection = LEFT;
+			if (joyStick.previousJoyXDirection == REST) {
 
 			currDisplayState = (currDisplayState + 2) % 3;
 			}
@@ -251,13 +251,13 @@ void cycleDisplayStates(void) {
 
 		 else if (joyStick.x < xdeadZoneLowerBound) {
 
-		 joyStick.xJoyDirection = "Right";
-		 if (strcmp(joyStick.previousJoyXDirection, "Rest") == 0) {
+		 joyStick.xJoyDirection = RIGHT;
+		 if (joyStick.previousJoyXDirection == REST) {
 			 currDisplayState = (currDisplayState + 1) % 3;
 		 }
 
 		 } else {
-			 joyStick.xJoyDirection = "Rest";
+			 joyStick.xJoyDirection = REST;
 		 }
 
 		 joyStick.previousJoyXDirection = joyStick.xJoyDirection;
