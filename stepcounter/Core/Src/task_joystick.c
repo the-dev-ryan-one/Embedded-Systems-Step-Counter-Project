@@ -36,7 +36,6 @@ static char* previousJoyYDirection = "Rest";
 
 #define uint16MaxVal 65535
 
-
 #define adcRestValX 2203
 #define adcMaxValX 3835
 #define adcMinValX 454
@@ -49,7 +48,7 @@ static char* previousJoyYDirection = "Rest";
 #define ydeadZoneUpBound 2679
 #define ydeadZoneLowerBound 1786
 
-#define MAX_STEP_INCREMENT 4
+#define MAX_STEP_INCREMENT 100
 
 uint16_t getJoyStickX (void) {
 
@@ -104,34 +103,59 @@ uint32_t incrementSteps(uint16_t percentageYdisplacement) {
 //
 //}
 
+
 void testModeJoyStickTask(void) {
 
 	if (!testStateFlag) return;
-	uint32_t incrementVal = 0;
 
-	if (percentageYdisplacement < 35) {
-	        incrementVal = 1;
-	    } else if (percentageYdisplacement < 50) {
-	        incrementVal = 5;
-	    } else if (percentageYdisplacement < 65) {
-	        incrementVal = 10;
-	    } else if (percentageYdisplacement < 80) {
-	        incrementVal = 100;
-	    } else if (percentageYdisplacement < 90) {
-	        incrementVal = 500;
-	    } else {
-	        incrementVal = 1000;
-	    }
 
+//	if (percentageYdisplacement < 10) {
+//	        incrementVal = 0;
+//	    }
+//	    else if (percentageYdisplacement < 25) {
+//	        incrementVal = 1;
+//	    }
+//	    else if (percentageYdisplacement < 40) {
+//	        incrementVal = 1;
+//	    }
+//	    else if (percentageYdisplacement < 55) {
+//	        incrementVal = 2;
+//	    }
+//	    else if (percentageYdisplacement < 70) {
+//	        incrementVal = 3;
+//	    }
+//	    else if (percentageYdisplacement < 82) {
+//	        incrementVal = 5;
+//	    }
+//	    else if (percentageYdisplacement < 92) {
+//	        incrementVal = 8;
+//	    }
+//	    else {
+//	        incrementVal = 15;
+//	    }
+
+	float normalisedDisplacement = (float)(percentageYdisplacement)/100.0f;
+	int32_t incrementVal = (int32_t)(normalisedDisplacement * normalisedDisplacement * normalisedDisplacement * MAX_STEP_INCREMENT);
+	if (incrementVal < 1.0) {
+		incrementVal = 1.0;
+	}
 
 	if (y > ydeadZoneUpBound) {
-		if (steps >= incrementVal)
+
+		if (steps <= incrementVal) {
+			steps = 0;
+		} else {
 			steps -=  incrementVal;
+		}
+
 	}
 
 	if (y < ydeadZoneLowerBound) {
 		if ((steps + incrementVal) <= (stepGoal - 10)) {
 			steps += incrementVal;
+		}
+		if ((steps + incrementVal) > (stepGoal - 10)) {
+			steps = (stepGoal - 10);
 		}
 
 	}
@@ -280,10 +304,6 @@ void joystick_task(void)
 
 	cycleDisplayStates();
 	handleJoyLongPress();
-
-	if (testStateFlag) {
-		testModeJoyStickTask();
-	}
 
 }
 
