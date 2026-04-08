@@ -12,6 +12,9 @@
 #include "app.h"
 #include "task_joystick.h"
 
+#include "tim.h"
+#include "pwm.h"
+
 static uint16_t raw_adc[3];
 
 uint16_t maxXValue = 3850;
@@ -23,15 +26,6 @@ uint16_t rawPotVal;
 
 #define uint16MaxVal 65535
 
-//typedef enum {
-//
-//	LEFT = 0,
-//	RIGHT,
-//	UP,
-//	DOWN,
-//	REST
-//
-//} joyStickDirections;
 
 static currJoyStickState joyStick = {
     .xJoyDirection = JOY_REST,
@@ -74,6 +68,28 @@ uint16_t getRawPotentiometerVal  (void) {
 	return raw_adc[0];
 }
 
+void checkGoalComplete(void) {
+
+	static uint32_t buzzerStartTime = 0;
+	static bool buzzerRunning = false;
+	static bool alreadyAlerted = false;
+	uint32_t buzzerLength = 300;
+
+	if (steps >= stepGoal && !buzzerRunning && !alreadyAlerted) {
+
+		buzzerStartTime = HAL_GetTick();
+		HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
+		buzzerRunning = true;
+		alreadyAlerted = true;
+	}
+
+	if (HAL_GetTick() >= (buzzerStartTime + buzzerLength) && buzzerRunning) {
+
+		HAL_TIM_PWM_Stop(&htim16, TIM_CHANNEL_1);
+		buzzerRunning = false;
+	}
+
+}
 
 void potentiometer_task(void) {
 

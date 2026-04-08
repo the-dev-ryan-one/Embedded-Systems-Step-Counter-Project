@@ -44,6 +44,8 @@ static currJoyStickState joyStick;
  * Date: 2026
  */
 
+void checkGoalComplete(void);
+
 /* Runs the joystick task , reads the ADC values from the joystick */
 void joystick_task(void);
 
