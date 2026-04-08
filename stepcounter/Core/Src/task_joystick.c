@@ -53,7 +53,8 @@ static currJoyStickState joyStick = {
 #define ydeadZoneUpBound 2679
 #define ydeadZoneLowerBound 1786
 
-#define MAX_STEP_INCREMENT 100
+#define MAX_STEP_INCREMENT 800
+#define MAX_LINEAR_STEP_INCREMENT 80
 
 uint16_t getJoyStickX (void) {
 
@@ -97,36 +98,28 @@ void testModeJoyStickTask(void) {
 
 	if (!testStateFlag) return;
 
+	int32_t incrementVal = 0;
 
-//	if (percentageYdisplacement < 10) {
-//	        incrementVal = 0;
-//	    }
-//	    else if (percentageYdisplacement < 25) {
-//	        incrementVal = 1;
-//	    }
-//	    else if (percentageYdisplacement < 40) {
-//	        incrementVal = 1;
-//	    }
-//	    else if (percentageYdisplacement < 55) {
-//	        incrementVal = 2;
-//	    }
-//	    else if (percentageYdisplacement < 70) {
-//	        incrementVal = 3;
-//	    }
-//	    else if (percentageYdisplacement < 82) {
-//	        incrementVal = 5;
-//	    }
-//	    else if (percentageYdisplacement < 92) {
-//	        incrementVal = 8;
-//	    }
-//	    else {
-//	        incrementVal = 15;
-//	    }
-
-	float normalisedDisplacement = (float)(joyStick.percentageYdisplacement)/100.0f;
-	int32_t incrementVal = (int32_t)(normalisedDisplacement * normalisedDisplacement * normalisedDisplacement * MAX_STEP_INCREMENT);
-	if (incrementVal < 1.0) {
-		incrementVal = 1.0;
+	if (joyStick.percentageYdisplacement < 6) {
+	    incrementVal = 0;
+	}
+	else if (joyStick.percentageYdisplacement < 40) {
+	    incrementVal = 1;
+	}
+	else if (joyStick.percentageYdisplacement < 65) {
+	    incrementVal = 5;
+	}
+	else if (joyStick.percentageYdisplacement < 75) {
+	    incrementVal = 10;
+	}
+	else if (joyStick.percentageYdisplacement < 85) {
+	    incrementVal = 25;
+	}
+	else if (joyStick.percentageYdisplacement < 95) {
+	    incrementVal = 50;
+	}
+	else {
+	    incrementVal = 800;
 	}
 
 	if (joyStick.y > ydeadZoneUpBound) {
