@@ -60,8 +60,8 @@ void displayGoalProgress(void) {
 
 void displayDistanceTravelled(void) {
 
-	ssd1306_SetCursor(0, 6);
-	snprintf(buffer, sizeof(buffer), " Distance Traveled");
+	ssd1306_SetCursor(0, 0);
+	snprintf(buffer, sizeof(buffer), "-Distance Traveled-");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 	ssd1306_SetCursor(24, 22);
