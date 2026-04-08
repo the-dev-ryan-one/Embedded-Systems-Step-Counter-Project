@@ -87,11 +87,11 @@ void potentiometer_task(void) {
 
 }
 
-uint32_t incrementSteps(uint16_t percentageYdisplacement) {
-
-	return (joyStick.percentageYdisplacement * joyStick.percentageYdisplacement * joyStick.percentageYdisplacement) / 670;
-
-}
+//uint32_t incrementSteps(uint16_t percentageYdisplacement) {
+//
+//	return (joyStick.percentageYdisplacement * joyStick.percentageYdisplacement * joyStick.percentageYdisplacement) / 670;
+//
+//}
 
 
 void testModeJoyStickTask(void) {
@@ -262,26 +262,43 @@ void cycleDisplayStates(void) {
 
 }
 
+//typedef enum {
+//
+//	LONGPRESS = 0,
+//	SHORTPRESS
+//
+//} joyStickPressType;
+
+
 void handleJoyLongPress(void) {
 
-	 static uint16_t joyStickPressCounter;
+	if (currDisplayState != GoalProgress) return;
+
+	 static uint16_t joyStickPressCounter = 0;
 	 static bool joyStickLongPress = false;
 
-	 if (currDisplayState == GoalProgress && HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
+	 if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
+
 		 joyStickPressCounter++;
+
 		 if (joyStickPressCounter >= 56 && !joyStickLongPress) {
 			 joyStickLongPress = true;
-
-			 if (inSetGoalState) {
-				 stepGoal = newGoal;
-				 inSetGoalState = !inSetGoalState;
-			 } else {
-				 inSetGoalState = !inSetGoalState;
-			 }
+			 stepGoal = newGoal;
+			 inSetGoalState = !inSetGoalState;
 		 }
+
+		 if (joyStickPressCounter > 0 && !joyStickLongPress && inSetGoalState){
+			 inSetGoalState = !inSetGoalState;
+		 }
+
 	 } else {
-		 joyStickPressCounter = 0;
-		 joyStickLongPress = false;
+
+//		 if (joyStickPressCounter > 0 && !joyStickLongPress){
+//			 inSetGoalState = !inSetGoalState;
+//		 }
+
+	 joyStickPressCounter = 0;
+	 joyStickLongPress = false;
 	 }
 }
 
