@@ -278,44 +278,39 @@ void cycleDisplayStates(void) {
 
 }
 
-//typedef enum {
-//
-//	LONGPRESS = 0,
-//	SHORTPRESS
-//
-//} joyStickPressType;
-
-
 void handleJoyLongPress(void) {
 
 	if (currDisplayState != GoalProgress) return;
 
 	 static uint16_t joyStickPressCounter = 0;
-	 static bool joyStickLongPress = false;
+	 static bool longPressHandled = false;
 
 	 if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
 
 		 joyStickPressCounter++;
 
-		 if (joyStickPressCounter >= 56 && !joyStickLongPress) {
-			 joyStickLongPress = true;
-			 stepGoal = newGoal;
-			 inSetGoalState = !inSetGoalState;
-		 }
-
-		 if (joyStickPressCounter > 0 && !joyStickLongPress && inSetGoalState){
-			 inSetGoalState = !inSetGoalState;
-		 }
+		 if (joyStickPressCounter >= 56 && !inSetGoalState &&!longPressHandled) {
+			 inSetGoalState = true;
+			 joyStickPressCounter = 0;
+			 longPressHandled = !longPressHandled;
+		} else if (joyStickPressCounter >= 56 && inSetGoalState && !longPressHandled) {
+			stepGoal = newGoal;
+			inSetGoalState = false;
+			joyStickPressCounter = 0;
+			longPressHandled = !longPressHandled;
+		}
 
 	 } else {
 
-//		 if (joyStickPressCounter > 0 && !joyStickLongPress){
-//			 inSetGoalState = !inSetGoalState;
-//		 }
+		 if (joyStickPressCounter > 0 && inSetGoalState && !longPressHandled){
+			 inSetGoalState = false;
+			 joyStickPressCounter = 0;
+		 }
 
-	 joyStickPressCounter = 0;
-	 joyStickLongPress = false;
-	 }
+		 joyStickPressCounter = 0;
+		 longPressHandled = false;
+
+	 	 }
 }
 
 

@@ -61,6 +61,7 @@ static uint32_t CheckGoalCompleteNextRun = 0;
 bool inSetGoalState = false;
 bool serialDebugFlag = false;
 bool testStateFlag = false;
+//bool goalAlreadyAltertedFlag = false;
 
 // reset Values
 uint16_t stepGoal = 1000;
