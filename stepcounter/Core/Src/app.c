@@ -37,8 +37,10 @@
 #define POTENTIOMETER_FREQUENCY_HZ 30
 #define TESTMODE_FREQUENCY_HZ 6
 #define CHECKGOALCOMPLETE_FREQUENCY_HZ 4
+#define PROGRESSLEDS_FREQUENCY_HZ 4
 
 
+#define PROGRESSLEDS_PERIOD_TICKS HZ_TO_TICKS(PROGRESSLEDS_FREQUENCY_HZ)
 #define BLINKY_PERIOD_TICKS       HZ_TO_TICKS(BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS       HZ_TO_TICKS(BUTTON_FREQUENCY_HZ)
 #define JOYSTICK_PERIOD_TICKS     HZ_TO_TICKS(JOYSTICK_FREQUENCY_HZ)
@@ -57,6 +59,7 @@ static uint32_t PotentiometerNextRun = 0;
 static uint32_t TestModeNextRun = 0;
 static uint32_t BuzzerAlertNextRun = 0;
 static uint32_t CheckGoalCompleteNextRun = 0;
+static uint32_t ProgressLEDsNextRun = 0;
 
 bool inSetGoalState = false;
 bool serialDebugFlag = false;
@@ -82,7 +85,7 @@ void app_main(void) {
 	PotentiometerNextRun = HAL_GetTick() + POTENTIOMETER_PERIOD_TICKS;
 	TestModeNextRun = HAL_GetTick() + TESTMODE_PERIOD_TICKS;
 	CheckGoalCompleteNextRun = HAL_GetTick() + CHECKGOALCOMPLETE_PERIOD_TICKS;
-
+	ProgressLEDsNextRun = HAL_GetTick() + PROGRESSLEDS_PERIOD_TICKS;
 
 	buttons_init();
 	ssd1306_Init();
