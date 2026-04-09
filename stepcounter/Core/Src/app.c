@@ -139,6 +139,11 @@ void app_main(void) {
 
     	  }
 
+    	  if (ticks > ProgressLEDsNextRun)
+    	  {
+    	      updateProgressLEDs();
+    	      ProgressLEDsNextRun += PROGRESSLEDS_PERIOD_TICKS;
+    	  }
 
     	}
 
