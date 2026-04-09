@@ -75,6 +75,10 @@ void checkGoalComplete(void) {
 	static bool alreadyAlerted = false;
 	uint32_t buzzerLength = 300;
 
+	if ( !(steps >= stepGoal) ) {
+		alreadyAlerted = false;
+	}
+
 	if (steps >= stepGoal && !buzzerRunning && !alreadyAlerted) {
 
 		buzzerStartTime = HAL_GetTick();

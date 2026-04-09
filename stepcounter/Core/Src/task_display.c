@@ -21,11 +21,19 @@ char buffer[32];
 
 void displayCurrentSteps(void) {
 
-	ssd1306_SetCursor(0, 6);
-	snprintf(buffer, sizeof(buffer), "--Current Steps--");
+	ssd1306_SetCursor(0, 0);
+	snprintf(buffer, sizeof(buffer), "-------------------");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
-	ssd1306_SetCursor(0, 22);
+	ssd1306_SetCursor(0, 11);
+	snprintf(buffer, sizeof(buffer), "  Current Steps  ");
+	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(0, 21);
+	snprintf(buffer, sizeof(buffer), "-------------------");
+	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(52, 40);
 
 	if (stepDisplayUnitsFlag) {
 		snprintf(buffer, sizeof(buffer), "%u steps", steps);
@@ -41,11 +49,19 @@ void displayCurrentSteps(void) {
 
 void displayGoalProgress(void) {
 
-	ssd1306_SetCursor(0, 6);
-	snprintf(buffer, sizeof(buffer), "--Goal Progress--");
+	ssd1306_SetCursor(0, 0);
+	snprintf(buffer, sizeof(buffer), "-------------------");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
-	ssd1306_SetCursor(0, 22);
+	ssd1306_SetCursor(0, 11);
+	snprintf(buffer, sizeof(buffer), "  Goal Progress  ");
+	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(0, 21);
+	snprintf(buffer, sizeof(buffer), "-------------------");
+	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(52, 40);
 
 	if (stepDisplayUnitsFlag) {
 		snprintf(buffer, sizeof(buffer), "%u steps", steps);
@@ -60,16 +76,26 @@ void displayGoalProgress(void) {
 
 void displayDistanceTravelled(void) {
 
+
 	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "-Distance Traveled-");
+	snprintf(buffer, sizeof(buffer), "-------------------");
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
-	ssd1306_SetCursor(24, 22);
+	ssd1306_SetCursor(0, 11);
+	snprintf(buffer, sizeof(buffer), " Distance Traveled ");
+	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(0, 21);
+	snprintf(buffer, sizeof(buffer), "-------------------");
+	ssd1306_WriteString(buffer, Font_7x10, White);
+
+	ssd1306_SetCursor(52, 40);
+
 	uint32_t distInCm = (uint32_t)steps * 80;
 	if (distanceDisplayUnitsFlag) {
 		uint32_t distWholeComponent = distInCm/100000;
 		uint32_t distFractComponent = (distInCm % 100000)/1000;
-		snprintf(buffer, sizeof(buffer), "%lu.%03lu km", distWholeComponent , distFractComponent);
+		snprintf(buffer, sizeof(buffer), "%lu.%02lu km", distWholeComponent , distFractComponent);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	} else {
 		uint32_t disInYards = distInCm * 1094 / 100000;
@@ -96,20 +122,6 @@ void display_task_execute(void) {
 		ssd1306_UpdateScreen();
 		return;
 	}
-
-//	if(testStateFlag) {
-//			ssd1306_SetCursor(0, 0);
-//			snprintf(buffer, sizeof(buffer), "-----Test Mode-----" );
-//			ssd1306_WriteString(buffer, Font_7x10, White);
-//
-//			ssd1306_SetCursor(0, 26);
-//			snprintf(buffer, sizeof(buffer), "   [ steps: %u ]  " , steps );
-//			ssd1306_WriteString(buffer, Font_7x10, White);
-//
-//			ssd1306_UpdateScreen();
-//			return;
-//
-//	}
 
 	switch(currDisplayState)
 	{
