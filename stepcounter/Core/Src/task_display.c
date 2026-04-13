@@ -115,8 +115,8 @@ void display_task_execute(void) {
 		snprintf(buffer, sizeof(buffer), "-----Set Goal-----" );
 		ssd1306_WriteString(buffer, Font_7x10, White);
 
-		ssd1306_SetCursor(0, 16);
-		snprintf(buffer, sizeof(buffer), "%u", newGoal);
+		ssd1306_SetCursor(24, 28);
+		snprintf(buffer, sizeof(buffer), "%u steps", newGoal);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 
 		ssd1306_UpdateScreen();
