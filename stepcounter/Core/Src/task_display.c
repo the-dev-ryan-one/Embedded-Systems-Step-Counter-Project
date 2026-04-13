@@ -63,15 +63,22 @@ void displayGoalProgress(void) {
 
 	ssd1306_SetCursor(52, 40);
 
-	if (stepDisplayUnitsFlag) {
-		snprintf(buffer, sizeof(buffer), "%u steps", steps);
-		ssd1306_WriteString(buffer, Font_7x10, White);
-	} else {
-		uint8_t goalPercentage = (uint32_t)steps * 100 / stepGoal;
-		snprintf(buffer, sizeof(buffer), "%u %%" , goalPercentage);
-		ssd1306_WriteString(buffer, Font_7x10, White);
+	// make progress bar string
+	uint8_t goalProgressOutOfTen = ((float)steps / (float)stepGoal ) * 9;
+	if (goalProgressOutOfTen >= 9) goalProgressOutOfTen = 9;
+	char progressBarString[13] = "[         ]";
+	for (uint8_t i=0 ; i<goalProgressOutOfTen ; i++ ) {
+		progressBarString[i+1] = '=';
 	}
+	progressBarString[12] = '\0';
 
+		ssd1306_SetCursor(16, 32);
+		snprintf(buffer, sizeof(buffer), "%u / %u Steps", steps , stepGoal);
+		ssd1306_WriteString(buffer, Font_6x8, White);
+
+		ssd1306_SetCursor(3, 46);
+		snprintf(buffer, sizeof(buffer), progressBarString);
+		ssd1306_WriteString(buffer, Font_11x18, White);
 }
 
 void displayDistanceTravelled(void) {
