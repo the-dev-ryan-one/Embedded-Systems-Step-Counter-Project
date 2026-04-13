@@ -107,39 +107,36 @@ void potentiometer_task(void) {
 
 }
 
-//uint32_t incrementSteps(uint16_t percentageYdisplacement) {
-//
-//	return (joyStick.percentageYdisplacement * joyStick.percentageYdisplacement * joyStick.percentageYdisplacement) / 670;
-//
-//}
-
-
 void testModeJoyStickTask(void) {
 
+	if (inSetGoalState) return;
 	if (!testStateFlag) return;
 
 	int32_t incrementVal = 0;
 
-	if (joyStick.percentageYdisplacement < 6) {
+	if (joyStick.percentageYdisplacement < 4) {
 	    incrementVal = 0;
 	}
-	else if (joyStick.percentageYdisplacement < 40) {
+	else if (joyStick.percentageYdisplacement < 35) {
 	    incrementVal = 1;
 	}
-	else if (joyStick.percentageYdisplacement < 65) {
+	else if (joyStick.percentageYdisplacement < 45) {
+	    incrementVal = 2;
+	}
+	else if (joyStick.percentageYdisplacement < 55) {
 	    incrementVal = 5;
 	}
-	else if (joyStick.percentageYdisplacement < 75) {
+	else if (joyStick.percentageYdisplacement < 63) {
 	    incrementVal = 10;
 	}
-	else if (joyStick.percentageYdisplacement < 85) {
-	    incrementVal = 25;
+	else if (joyStick.percentageYdisplacement < 71) {
+	    incrementVal = 15;
 	}
 	else if (joyStick.percentageYdisplacement < 95) {
-	    incrementVal = 50;
+	    incrementVal = 25 + (joyStick.percentageYdisplacement - 71) * 225 / 24;
 	}
 	else {
-	    incrementVal = 800;
+	    incrementVal = 550;
 	}
 
 	if (joyStick.y > ydeadZoneUpBound) {
