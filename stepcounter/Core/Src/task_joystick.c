@@ -50,6 +50,8 @@ static currJoyStickState joyStick = {
 #define MAX_STEP_INCREMENT 800
 #define MAX_LINEAR_STEP_INCREMENT 80
 
+#define ALERT_DISPLAY_PERIOD 300
+
 uint16_t getJoyStickX (void) {
 
 //	return raw_adc[1];
@@ -73,10 +75,23 @@ void checkGoalComplete(void) {
 	static uint32_t buzzerStartTime = 0;
 	static bool buzzerRunning = false;
 	static bool alreadyAlerted = false;
-	uint32_t buzzerLength = 300;
+	static bool alreadyAlertedDisplay = false;
+	static uint32_t initialAlertTime = 0;
+	uint32_t buzzerLength = 500;
 
 	if ( !(steps >= stepGoal) ) {
 		alreadyAlerted = false;
+		alreadyAlertedDisplay = false;
+	}
+
+	if (steps >= stepGoal && !alreadyAlertedDisplay) {
+		goalCompleteFlag = true;
+		initialAlertTime = HAL_GetTick();
+		alreadyAlertedDisplay = true;
+	}
+
+	if (alreadyAlertedDisplay && HAL_GetTick() >= initialAlertTime + ALERT_DISPLAY_PERIOD) {
+		goalCompleteFlag = false;
 	}
 
 	if (steps >= stepGoal && !buzzerRunning && !alreadyAlerted) {

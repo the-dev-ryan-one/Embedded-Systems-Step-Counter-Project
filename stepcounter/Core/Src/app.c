@@ -64,7 +64,8 @@ static uint32_t ProgressLEDsNextRun = 0;
 bool inSetGoalState = false;
 bool serialDebugFlag = false;
 bool testStateFlag = false;
-//bool goalAlreadyAltertedFlag = false;
+bool goalCompleteFlag = false;
+
 
 // reset Values
 uint16_t stepGoal = 1000;

@@ -117,6 +117,20 @@ void display_task_execute(void) {
 
 	ssd1306_Fill(Black);
 
+	if (goalCompleteFlag) {
+
+		ssd1306_SetCursor(10, 16);
+		ssd1306_WriteString("******************", Font_6x8, White);
+		ssd1306_SetCursor(10, 26);
+		ssd1306_WriteString("* Goal Complete! *", Font_6x8, White);
+		ssd1306_SetCursor(10, 36);
+		ssd1306_WriteString("******************", Font_6x8, White);
+
+		ssd1306_UpdateScreen();
+		return;
+	}
+
+
 	if (inSetGoalState) {
 		ssd1306_SetCursor(0, 0);
 		snprintf(buffer, sizeof(buffer), "-----Set Goal-----" );

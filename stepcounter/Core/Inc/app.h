@@ -26,6 +26,9 @@ typedef enum {
 
 extern bool distanceDisplayUnitsFlag;
 extern bool stepDisplayUnitsFlag;
+extern bool goalCompleteFlag;
+
+
 extern displayState currDisplayState;
 extern bool inSetGoalState;
 
