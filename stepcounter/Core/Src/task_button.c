@@ -14,7 +14,7 @@
 #include "task_button.h"
 
 static uint8_t dutyCycle = 0;
-#define SW2PressWindow 2000
+#define SW2PressWindow 500
 static uint8_t consecutiveSW2Presses = 0;
 static uint32_t firstSW2press = 0;
 
@@ -61,13 +61,13 @@ void button_task_execute(void)
 
 	    	consecutiveSW2Presses++;
 
-			if (consecutiveSW2Presses == 1) {
-				firstSW2press = HAL_GetTick();
-			}
+	    	if (consecutiveSW2Presses == 0) {
+	    		consecutiveSW2Presses = 1;
+	    		firstSW2press = HAL_GetTick();
 
-			if (consecutiveSW2Presses >= 2 && HAL_GetTick() <= (firstSW2press + SW2PressWindow)) {
-				testStateFlag = !testStateFlag;
-				consecutiveSW2Presses = 0;
+	    	} else if (HAL_GetTick() <= (firstSW2press + SW2PressWindow)) {
+	    		testStateFlag = !testStateFlag;
+	    		consecutiveSW2Presses = 0;
 			} else {
 				consecutiveSW2Presses = 1;
 				firstSW2press = HAL_GetTick();
