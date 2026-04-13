@@ -9,6 +9,7 @@
 #include "gpio.h"
 #include "buttons.h"
 #include "adc.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -24,6 +25,7 @@
 #include "usart.h"
 #include "tim.h"
 #include "pwm.h"
+#include "imu_lsm6ds.h"
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)
@@ -38,6 +40,7 @@
 #define TESTMODE_FREQUENCY_HZ 6
 #define CHECKGOALCOMPLETE_FREQUENCY_HZ 4
 #define PROGRESSLEDS_FREQUENCY_HZ 4
+#define FETCHACCEL_FREQUENCY_HZ 10
 
 
 #define PROGRESSLEDS_PERIOD_TICKS HZ_TO_TICKS(PROGRESSLEDS_FREQUENCY_HZ)
@@ -50,6 +53,7 @@
 #define TESTMODE_PERIOD_TICKS HZ_TO_TICKS(TESTMODE_FREQUENCY_HZ)
 #define BUZZER_ALERT_PERIOD_TICKS HZ_TO_TICKS(BUZZER_ALERT_FREQUENCY_HZ)
 #define CHECKGOALCOMPLETE_PERIOD_TICKS HZ_TO_TICKS(CHECKGOALCOMPLETE_FREQUENCY_HZ)
+#define FETCHACCEL_PERIOD_TICKS HZ_TO_TICKS(FETCHACCEL_FREQUENCY_HZ)
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
@@ -57,9 +61,10 @@ static uint32_t JoystickNextRun = 0;
 static uint32_t DisplayNextRun = 0;
 static uint32_t PotentiometerNextRun = 0;
 static uint32_t TestModeNextRun = 0;
-static uint32_t BuzzerAlertNextRun = 0;
+//static uint32_t BuzzerAlertNextRun = 0;
 static uint32_t CheckGoalCompleteNextRun = 0;
 static uint32_t ProgressLEDsNextRun = 0;
+static uint32_t FetchAccelNextRun = 0;
 
 bool inSetGoalState = false;
 bool serialDebugFlag = false;
@@ -87,10 +92,13 @@ void app_main(void) {
 	TestModeNextRun = HAL_GetTick() + TESTMODE_PERIOD_TICKS;
 	CheckGoalCompleteNextRun = HAL_GetTick() + CHECKGOALCOMPLETE_PERIOD_TICKS;
 	ProgressLEDsNextRun = HAL_GetTick() + PROGRESSLEDS_PERIOD_TICKS;
+	FetchAccelNextRun = HAL_GetTick() + FETCHACCEL_PERIOD_TICKS;
 
 	buttons_init();
 	ssd1306_Init();
 	initialisePWM();
+
+	initIMU();
 
     while(1)
     	{
@@ -139,6 +147,11 @@ void app_main(void) {
 
     	  }
 
+    	  if (ticks > FetchAccelNextRun)
+    	  {
+    		  fetchAndConcatXAcell();
+    		  FetchAccelNextRun += FETCHACCEL_PERIOD_TICKS;
+    	  }
 
     	}
 
