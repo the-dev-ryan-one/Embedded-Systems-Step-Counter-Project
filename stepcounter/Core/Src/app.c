@@ -149,7 +149,7 @@ void app_main(void) {
 
     	  if (ticks > FetchAccelNextRun)
     	  {
-    		  fetchAndConcatXAcell();
+    		  updateAccelVec();
     		  FetchAccelNextRun += FETCHACCEL_PERIOD_TICKS;
     	  }
 
