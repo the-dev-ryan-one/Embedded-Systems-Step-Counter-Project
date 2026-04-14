@@ -155,6 +155,12 @@ void app_main(void) {
     	      ProgressLEDsNextRun += PROGRESSLEDS_PERIOD_TICKS;
     	  }
 
+    	  if (ticks > FetchAccelNextRun)
+		  {
+			  updateAccelVec();
+			  FetchAccelNextRun += FETCHACCEL_PERIOD_TICKS;
+		  }
+
     	}
 
 }
