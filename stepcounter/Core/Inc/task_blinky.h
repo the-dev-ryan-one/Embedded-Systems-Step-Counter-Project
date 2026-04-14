@@ -11,6 +11,7 @@
 
 
 void blinky_task_execute(void);
+void updateProgressLEDs(void);
 
 #endif
 
