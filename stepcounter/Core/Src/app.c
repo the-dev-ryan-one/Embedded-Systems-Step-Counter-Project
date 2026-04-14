@@ -26,6 +26,8 @@
 #include "tim.h"
 #include "pwm.h"
 #include "imu_lsm6ds.h"
+#include "accelerometer.h"
+#include "task_stepcounter.h"
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)

@@ -7,13 +7,6 @@ static FilterAvg xFilter;
 static FilterAvg yFilter;
 static FilterAvg zFilter;
 
-typedef struct {
-
-	int16_t x;
-	int16_t y;
-	int16_t z;
-
-} AccelVec;
 
 AccelVec currAccelVec = {0,0,0};
 
@@ -23,7 +16,9 @@ void initIMU(void) {
 	initFilter(&xFilter);
 	initFilter(&yFilter);
 	initFilter(&zFilter);
-
+	imu_lsm6ds_write_byte(CTRL10_C , ENABLE_STEPCOUNTER);
+	imu_lsm6ds_write_byte(MD1_CFG, ENABLE_STEPDETECT_INTERRUPT);
+	imu_lsm6ds_write_byte(TAP_CFG, ENABLE_TAP_CFG);
 }
 
 void updateAccelVec(void) {
@@ -50,5 +45,14 @@ void updateAccelVec(void) {
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
 	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
+}
+
+uint16_t getStepCount(void) {
+
+	uint8_t lowByte = imu_lsm6ds_read_byte(STEP_COUNTER_L);
+	uint8_t highByte = imu_lsm6ds_read_byte(STEP_COUNTER_H);
+
+	uint16_t currStepCount = (uint16_t)(highByte << 8 | lowByte);
+	return currStepCount;
 
 }
