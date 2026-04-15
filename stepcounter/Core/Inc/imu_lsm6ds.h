@@ -122,7 +122,7 @@ typedef enum {
 #define CTRL1_XL_HIGH_PERFORMANCE 0xA0U
 #define ENABLE_STEPCOUNTER 0b00010100U
 #define ENABLE_STEPDETECT_INTERRUPT 0b10000000U
-#define ENABLE_TAP_CFG 0b10000000U
+#define ENABLE_TAP_CFG 0b10001001U
 
 void imu_lsm6ds_write_byte(imu_register_t register_address, uint8_t value);
 

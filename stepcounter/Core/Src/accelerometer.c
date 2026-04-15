@@ -39,11 +39,11 @@ void updateAccelVec(void) {
 	int16_t zAccelVal = (int16_t)(acc_z_high << 8 | acc_z_low);
 	currAccelVec.z = updatefilter(&zFilter, zAccelVal);
 
-	char buffer[32];
-	snprintf(buffer, sizeof(buffer), "IMUVec : %d , %d, %d", xAccelVal, yAccelVal ,zAccelVal );
-
-	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
+//	char buffer[32];
+//	snprintf(buffer, sizeof(buffer), "IMUVec : %d , %d, %d", xAccelVal, yAccelVal ,zAccelVal );
+//
+//	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+//	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
 
 }
 
