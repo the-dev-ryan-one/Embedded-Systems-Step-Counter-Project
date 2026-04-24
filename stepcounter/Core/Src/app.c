@@ -9,6 +9,7 @@
 #include "gpio.h"
 #include "buttons.h"
 #include "adc.h"
+#include "imu_lsm6ds.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -153,6 +154,11 @@ void app_main(void) {
     	  {
     	      updateProgressLEDs();
     	      ProgressLEDsNextRun += PROGRESSLEDS_PERIOD_TICKS;
+
+    	      // ---------
+    	      getStepCount();
+    	      //----------
+
     	  }
 
 //    	  if (ticks > FetchAccelNextRun)

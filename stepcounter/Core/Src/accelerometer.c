@@ -13,12 +13,17 @@ AccelVec currAccelVec = {0,0,0};
 void initIMU(void) {
 
 	imu_lsm6ds_write_byte(CTRL1_XL, CTRL1_XL_HIGH_PERFORMANCE);
+
 	initFilter(&xFilter);
 	initFilter(&yFilter);
 	initFilter(&zFilter);
+
+//	imu_lsm6ds_write_byte(CTRL10_C , ENABLE_STEPCOUNTER);
+//	imu_lsm6ds_write_byte(MD1_CFG, ENABLE_STEPDETECT_INTERRUPT);
+//	imu_lsm6ds_write_byte(TAP_CFG, ENABLE_TAP_CFG);
+
 	imu_lsm6ds_write_byte(CTRL10_C , ENABLE_STEPCOUNTER);
-	imu_lsm6ds_write_byte(MD1_CFG, ENABLE_STEPDETECT_INTERRUPT);
-	imu_lsm6ds_write_byte(TAP_CFG, ENABLE_TAP_CFG);
+
 }
 
 void updateAccelVec(void) {
@@ -53,6 +58,13 @@ uint16_t getStepCount(void) {
 	uint8_t highByte = imu_lsm6ds_read_byte(STEP_COUNTER_H);
 
 	uint16_t currStepCount = (uint16_t)(highByte << 8 | lowByte);
+
+	char buffer[32];
+	snprintf(buffer, sizeof(buffer), "curr step: %d" , currStepCount );
+
+	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
+	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
+
 	return currStepCount;
 
 }
