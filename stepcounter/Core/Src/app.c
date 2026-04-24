@@ -73,11 +73,12 @@ bool inSetGoalState = false;
 bool serialDebugFlag = false;
 bool testStateFlag = false;
 bool goalCompleteFlag = false;
+volatile bool clearInteruptFlag = false;
 
 
 // reset Values
 uint16_t stepGoal = 1000;
-uint16_t steps = 0;
+volatile uint16_t steps = 0;
 uint16_t newGoal = 500;
 
 displayState currDisplayState = CurrentSteps;
@@ -155,7 +156,11 @@ void app_main(void) {
     	      updateProgressLEDs();
     	      ProgressLEDsNextRun += PROGRESSLEDS_PERIOD_TICKS;
 
-    	      // ---------
+//    	      // ---------
+//    	      if (clearInteruptFlag) {
+//    	    	  clearInteruptFlag = false;
+//    	      }
+
     	      getStepCount();
     	      //----------
 

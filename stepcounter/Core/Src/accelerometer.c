@@ -18,11 +18,9 @@ void initIMU(void) {
 	initFilter(&yFilter);
 	initFilter(&zFilter);
 
-//	imu_lsm6ds_write_byte(CTRL10_C , ENABLE_STEPCOUNTER);
-//	imu_lsm6ds_write_byte(MD1_CFG, ENABLE_STEPDETECT_INTERRUPT);
-//	imu_lsm6ds_write_byte(TAP_CFG, ENABLE_TAP_CFG);
-
 	imu_lsm6ds_write_byte(CTRL10_C , ENABLE_STEPCOUNTER);
+	imu_lsm6ds_write_byte(INT1_CTRL , ENABLE_INTERRUPT_ON_INT1);
+	imu_lsm6ds_write_byte(TAP_CFG, ENABLE_TAP_CFG);
 
 }
 

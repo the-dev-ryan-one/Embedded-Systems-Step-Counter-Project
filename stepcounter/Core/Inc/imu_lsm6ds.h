@@ -138,8 +138,8 @@ typedef enum {
 // enable the stepcounter algo , not the last 1 is for reseting the step count.
 #define ENABLE_STEPCOUNTER 0b00010110U
 
-//#define ENABLE_STEPDETECT_INTERRUPT 0b10000000U
-//#define ENABLE_TAP_CFG 0b10001001U
+#define ENABLE_INTERRUPT_ON_INT1 0b10000000U
+#define ENABLE_TAP_CFG 0b10000000U
 
 void imu_lsm6ds_write_byte(imu_register_t register_address, uint8_t value);
 uint8_t imu_lsm6ds_read_byte(imu_register_t register_address);

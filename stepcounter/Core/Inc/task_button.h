@@ -2,9 +2,9 @@
 #ifndef task_button_h
 #define task_button_h
 
-extern uint16_t steps;
-extern uint16_t distance;
-extern uint16_t stepGoal;
+//extern uint16_t steps;
+//extern uint16_t distance;
+//extern uint16_t stepGoal;
 
 
 /*

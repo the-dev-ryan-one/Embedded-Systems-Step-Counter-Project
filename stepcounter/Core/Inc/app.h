@@ -12,10 +12,11 @@
 /* flag to toggle for serial debug */
 extern bool serialDebugFlag;
 extern bool testStateFlag;
+extern volatile bool clearInteruptFlag;
 
 extern uint16_t stepGoal;
 extern uint16_t newGoal;
-extern uint16_t steps;
+extern volatile uint16_t steps;
 extern uint16_t distance;
 
 typedef enum {
