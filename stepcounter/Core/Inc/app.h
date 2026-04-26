@@ -1,13 +1,16 @@
-#include "gpio.h"
-#include "rgb.h"
-#include <stdbool.h>
-
 /*
  * app.h
  * Header file for the main application module
  * Authors: Ryan Teape, Felissa Chian
  * Date: 2026
  */
+
+#ifndef APP_H
+#define APP_H
+
+#include "gpio.h"
+#include "rgb.h"
+#include <stdbool.h>
 
 /* flag to toggle for serial debug */
 extern bool serialDebugFlag;
@@ -28,13 +31,13 @@ typedef enum {
 extern bool distanceDisplayUnitsFlag;
 extern bool stepDisplayUnitsFlag;
 extern bool goalCompleteFlag;
-
-
-extern displayState currDisplayState;
 extern bool inSetGoalState;
+extern displayState currDisplayState;
 
-/* main application */
+
 void app_main(void);
+
+#endif /* APP_H */
 
 
 
