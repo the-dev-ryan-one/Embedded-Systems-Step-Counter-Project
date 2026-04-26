@@ -7,9 +7,7 @@ extern uint16_t maxXValue;
 extern uint16_t minXValue;
 extern uint16_t maxYValue;
 extern uint16_t minYValue;
-
 extern uint16_t rawPotVal;
-
 
 typedef enum {
 
@@ -35,14 +33,6 @@ typedef struct {
 } currJoyStickState;
 
 static currJoyStickState joyStick;
-
-
-/*
- * task_joystick.h
- * Header file for the joystick task module
- * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
- */
 
 void checkGoalComplete(void);
 

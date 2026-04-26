@@ -84,7 +84,6 @@ void app_main(void) {
 	buttons_init();
 	ssd1306_Init();
 	initialisePWM();
-
 	initIMU();
 
     while(1)

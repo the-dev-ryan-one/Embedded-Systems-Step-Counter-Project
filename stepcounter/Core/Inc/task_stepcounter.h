@@ -5,15 +5,15 @@
  *      Author: Uni
  */
 
-#include <stdio.h>
-#include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-#ifndef INC_TASK_STEPCOUNTER_H_
-#define INC_TASK_STEPCOUNTER_H_
+#ifndef TASK_STEPCOUNTER_H
+#define TASK_STEPCOUNTER_H
 
 // in task_stepcounter.h
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
 
-#endif /* INC_TASK_STEPCOUNTER_H_ */
+void checkGoalComplete(void);
+
+#endif /* TASK_STEPCOUNTER_H */
