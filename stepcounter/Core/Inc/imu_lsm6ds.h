@@ -10,20 +10,12 @@
 
 #include <stdint.h>
 
-//typedef enum {
-//	CTRL1_XL = 0x10,
-//	OUTX_L_XL = 0x28,
-//	OUTX_H_XL,
-//	OUTY_L_XL,
-//	OUTY_H_XL,
-//	OUTZ_L_XL,
-//	OUTZ_H_XL,
-//
-//} imu_register_t;
-
 typedef enum {
-    FUNC_CFG_ACCESS = 0x01,
-    SENSOR_SYNC_TIME_FRAME = 0x04,
+    RESERVED_00 = 0x00,
+    FUNC_CFG_ACCESS,
+    RESERVED_02,
+    RESERVED_03,
+    SENSOR_SYNC_TIME_FRAME,
     SENSOR_SYNC_RES_RATIO,
     FIFO_CTRL1,
     FIFO_CTRL2,
@@ -31,7 +23,8 @@ typedef enum {
     FIFO_CTRL4,
     FIFO_CTRL5,
     DRDY_PULSE_CFG_G,
-    INT1_CTRL = 0x0D,
+    RESERVED_0C,
+    INT1_CTRL,
     INT2_CTRL,
     WHO_AM_I,
     CTRL1_XL,
@@ -49,7 +42,8 @@ typedef enum {
     TAP_SRC,
     D6D_SRC,
     STATUS_REG,
-    OUT_TEMP_L = 0x20,
+    RESERVED_1F,
+    OUT_TEMP_L,
     OUT_TEMP_H,
     OUTX_L_G,
     OUTX_H_G,
@@ -84,7 +78,13 @@ typedef enum {
     TIMESTAMP0_REG,
     TIMESTAMP1_REG,
     TIMESTAMP2_REG,
-    STEP_TIMESTAMP_L = 0x49,
+    RESERVED_43,
+    RESERVED_44,
+    RESERVED_45,
+    RESERVED_46,
+    RESERVED_47,
+    RESERVED_48,
+    STEP_TIMESTAMP_L,
     STEP_TIMESTAMP_H,
     STEP_COUNTER_L,
     STEP_COUNTER_H,
@@ -97,7 +97,9 @@ typedef enum {
     FUNC_SRC1,
     FUNC_SRC2,
     WRIST_TILT_IA,
-    TAP_CFG = 0x58,
+    RESERVED_56,
+    RESERVED_57,
+    TAP_CFG,
     TAP_THS_6D,
     INT_DUR2,
     WAKE_UP_THS,
@@ -107,25 +109,39 @@ typedef enum {
     MD2_CFG,
     MASTER_CMD_CODE,
     SENS_SYNC_SPI_ERROR_CODE,
-    OUT_MAG_RAW_X_L = 0x66,
+    RESERVED_62,
+    RESERVED_63,
+    RESERVED_64,
+    RESERVED_65,
+    OUT_MAG_RAW_X_L,
     OUT_MAG_RAW_X_H,
     OUT_MAG_RAW_Y_L,
     OUT_MAG_RAW_Y_H,
     OUT_MAG_RAW_Z_L,
     OUT_MAG_RAW_Z_H,
-    X_OFS_USR = 0x73,
+    RESERVED_6C,
+    RESERVED_6D,
+    RESERVED_6E,
+    RESERVED_6F,
+    RESERVED_70,
+    RESERVED_71,
+    RESERVED_72,
+    X_OFS_USR,
     Y_OFS_USR,
     Z_OFS_USR,
 } imu_register_t;
 
-// Standard options
-#define CTRL1_XL_HIGH_PERFORMANCE 0xA0U
-#define ENABLE_STEPCOUNTER 0b00010100U
-#define ENABLE_STEPDETECT_INTERRUPT 0b10000000U
+
+
+// turn on the IMU
+#define CTRL1_XL_HIGH_PERFORMANCE 0b00100000U
+// enable the stepcounter algo , not the last 1 is for reseting the step count.
+#define ENABLE_STEPCOUNTER 0b00010110U
+
+#define ENABLE_INTERRUPT_ON_INT1 0b10000000U
 #define ENABLE_TAP_CFG 0b10000000U
 
 void imu_lsm6ds_write_byte(imu_register_t register_address, uint8_t value);
-
 uint8_t imu_lsm6ds_read_byte(imu_register_t register_address);
 
 #endif /* INC_IMU_LSM6DS_H_ */
