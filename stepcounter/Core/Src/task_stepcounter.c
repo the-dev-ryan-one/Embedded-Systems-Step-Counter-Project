@@ -6,7 +6,6 @@
  */
 
 #include "task_stepcounter.h"
-#include "imu_lsm6ds.h"
 #include "app.h"
 #include "tim.h"
 #include "pwm.h"
@@ -29,8 +28,9 @@ void checkGoalComplete(void)
 	static bool alreadyAlerted = false;
 	static bool alreadyAlertedDisplay = false;
 	static uint32_t initialAlertTime = 0;
+	uint32_t currTime = HAL_GetTick();
 
-	if ( !(steps >= stepGoal) )
+	if (steps < stepGoal)
 	{
 		alreadyAlerted = false;
 		alreadyAlertedDisplay = false;
@@ -39,24 +39,24 @@ void checkGoalComplete(void)
 	if (steps >= stepGoal && !alreadyAlertedDisplay)
 	{
 		goalCompleteFlag = true;
-		initialAlertTime = HAL_GetTick();
+		initialAlertTime = currTime;
 		alreadyAlertedDisplay = true;
 	}
 
-	if (alreadyAlertedDisplay && HAL_GetTick() >= initialAlertTime + ALERT_DISPLAY_PERIOD)
+	if (alreadyAlertedDisplay && currTime >= initialAlertTime + ALERT_DISPLAY_PERIOD)
 	{
 		goalCompleteFlag = false;
 	}
 
 	if (steps >= stepGoal && !buzzerRunning && !alreadyAlerted)
 	{
-		buzzerStartTime = HAL_GetTick();
+		buzzerStartTime = currTime;
 		HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
 		buzzerRunning = true;
 		alreadyAlerted = true;
 	}
 
-	if (HAL_GetTick() >= (buzzerStartTime + BUZZER_LENGTH) && buzzerRunning)
+	if (currTime >= (buzzerStartTime + BUZZER_LENGTH) && buzzerRunning)
 	{
 		HAL_TIM_PWM_Stop(&htim16, TIM_CHANNEL_1);
 		buzzerRunning = false;

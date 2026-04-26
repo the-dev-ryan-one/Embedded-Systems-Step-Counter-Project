@@ -99,7 +99,9 @@ void testModeJoyStickTask(void)
 	else if (joyStick.percentageYdisplacement < 95)
 	{
 	    incrementVal = 25 + (joyStick.percentageYdisplacement - 71) * 225 / 24;
-	} else {
+	}
+	else
+	{
 	    incrementVal = MAX_STEP_INCREMENT;
 	}
 
@@ -109,7 +111,9 @@ void testModeJoyStickTask(void)
 		if (steps <= incrementVal)
 		{
 			steps = 0;
-		} else {
+		}
+		else
+		{
 			steps -=  incrementVal;
 		}
 
@@ -138,7 +142,9 @@ uint16_t calcPercentageXDisplacement(void)
 	if (joyStick.x > ADC_REST_VAL_X)
 	{
 		joyStick.percentageXdisplacement = (joyStick.x - ADC_REST_VAL_X)*100 / (ADC_MAX_VAL_X - ADC_REST_VAL_X);
-	} else {
+	}
+	else
+	{
 		joyStick.percentageXdisplacement = (ADC_REST_VAL_X - joyStick.x)*100 / (ADC_REST_VAL_X - ADC_MIN_VAL_X);
 	}
 
@@ -164,43 +170,52 @@ uint16_t calcPercentageYDisplacement(void)
 	if (joyStick.y > ADC_REST_VAL_Y)
 	{
 		joyStick.percentageYdisplacement = (joyStick.y - ADC_REST_VAL_Y)*100 / (ADC_MAX_VAL_Y - ADC_REST_VAL_Y);
-		} else {
+	}
+	else
+	{
 		joyStick.percentageYdisplacement = (ADC_REST_VAL_Y - joyStick.y)*100 / (ADC_REST_VAL_Y - ADC_MIN_VAL_Y);
-		}
+	}
 
-		if (joyStick.percentageYdisplacement > 100)
-		{
-				joyStick.percentageYdisplacement = 100;
-		}
+	if (joyStick.percentageYdisplacement > 100)
+	{
+		joyStick.percentageYdisplacement = 100;
+	}
 
 	return joyStick.percentageYdisplacement;
 
 }
 
-void setJoyYDirection()
+void setJoyYDirection(void)
 {
 	if (joyStick.y < Y_DEAD_ZONE_LOWER_BOUND)
 	{
 			joyStick.yJoyDirection = JOY_UP;
 	}
-	else if (joyStick.y > Y_DEAD_ZONE_UP_BOUND) {
+	else if (joyStick.y > Y_DEAD_ZONE_UP_BOUND)
+	{
 			 joyStick.yJoyDirection = JOY_DOWN;
-	} else {
+	}
+	else
+	{
 		joyStick.yJoyDirection = JOY_REST;
 	}
 }
 
-void setJoyXDirection()
+void setJoyXDirection(void)
 {
 
 	 if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
 	 {
-	        joyStick.xJoyDirection = JOY_LEFT;
-	    } else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND) {
-	        joyStick.xJoyDirection = JOY_RIGHT;
-	    } else {
-	        joyStick.xJoyDirection = JOY_REST;
-	    }
+		 joyStick.xJoyDirection = JOY_LEFT;
+	 }
+	 else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND)
+	 {
+		 joyStick.xJoyDirection = JOY_RIGHT;
+	 }
+	 else
+	 {
+		 joyStick.xJoyDirection = JOY_REST;
+	 }
 }
 
 void toggleUnits(void)
@@ -214,7 +229,6 @@ void toggleUnits(void)
 
 		 if (joyStick.previousJoyYDirection == JOY_REST)
 		 {
-
 			 if (currDisplayState == DistanceTravelled)
 			 {
 				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
@@ -225,9 +239,11 @@ void toggleUnits(void)
 			 }
 		 }
 
-		 } else {
-			 joyStick.yJoyDirection = JOY_REST;
-		 }
+		}
+		else
+		{
+			joyStick.yJoyDirection = JOY_REST;
+		}
 
 	joyStick.previousJoyYDirection = joyStick.yJoyDirection;
 }
@@ -249,16 +265,21 @@ void cycleDisplayStates(void)
 			currDisplayState = (currDisplayState + 2) % 3;
 			}
 
-			}
-
-		 else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND) {
-
-		 joyStick.xJoyDirection = JOY_RIGHT;
-		 if (joyStick.previousJoyXDirection == JOY_REST) {
-			 currDisplayState = (currDisplayState + 1) % 3;
 		 }
 
-		 } else {
+		 	else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND)
+		 	{
+
+		 		joyStick.xJoyDirection = JOY_RIGHT;
+
+		 	if (joyStick.previousJoyXDirection == JOY_REST)
+		 	{
+			 currDisplayState = (currDisplayState + 1) % 3;
+		 	}
+
+		 	}
+		 	else
+		 	{
 			 joyStick.xJoyDirection = JOY_REST;
 		 }
 
@@ -266,31 +287,39 @@ void cycleDisplayStates(void)
 
 }
 
-void handleJoyLongPress(void) {
+void handleJoyLongPress(void)
+{
 
 	if (currDisplayState != GoalProgress) return;
 
 	 static uint16_t joyStickPressCounter = 0;
 	 static bool longPressHandled = false;
 
-	 if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 ) {
+	 if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 )
+	 {
 
 		 joyStickPressCounter++;
 
-		 if (joyStickPressCounter >= LONG_PRESS_TICKS && !inSetGoalState &&!longPressHandled) {
+		 if (joyStickPressCounter >= LONG_PRESS_TICKS && !inSetGoalState &&!longPressHandled)
+		 {
 			 inSetGoalState = true;
 			 joyStickPressCounter = 0;
 			 longPressHandled = !longPressHandled;
-		} else if (joyStickPressCounter >= LONG_PRESS_TICKS && inSetGoalState && !longPressHandled) {
+		}
+		else if (joyStickPressCounter >= LONG_PRESS_TICKS && inSetGoalState && !longPressHandled)
+		{
 			stepGoal = newGoal;
 			inSetGoalState = false;
 			joyStickPressCounter = 0;
 			longPressHandled = !longPressHandled;
 		}
 
-	 } else {
+	 }
+	 else
+	 {
 
-		 if (joyStickPressCounter > 0 && inSetGoalState && !longPressHandled){
+		 if (joyStickPressCounter > 0 && inSetGoalState && !longPressHandled)
+		 {
 			 inSetGoalState = false;
 			 joyStickPressCounter = 0;
 		 }
@@ -300,6 +329,7 @@ void handleJoyLongPress(void) {
 
 	 	 }
 }
+
 void joystick_task(void)
 {
 
