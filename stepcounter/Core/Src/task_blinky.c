@@ -1,10 +1,3 @@
-
-#include "gpio.h"
-#include "task_blinky.h"
-#include "rgb.h"
-#include "app.h"
-#include "pwm.h"
-
 /*
  * task_blinky.c
  * Blinky task module - toggles the onboard LED
@@ -12,23 +5,34 @@
  * Date: 2026
  */
 
+#include "gpio.h"
+#include "task_blinky.h"
+#include "rgb.h"
+#include "app.h"
+#include "pwm.h"
+
 void blinky_task_execute(void)
 {
-	// Task one logic
 	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-
 }
 
-void updateProgressLEDs(void) {
-
-	uint8_t goalCompletePrecentage = (steps * 100) / (stepGoal);
-
+void updateProgressLEDs(void)
+{
+	if (stepGoal == 0)
+	{
+		return;
+	}
+	uint8_t goalCompletePercentage = (steps * 100) / (stepGoal);
 	uint8_t DS3Brightness;
-	if (goalCompletePrecentage >= 25) {
+
+	if (goalCompletePercentage >= 25)
+	{
 		DS3Brightness = 100;
 		pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, DS3Brightness);
-	} else {
-		DS3Brightness = (goalCompletePrecentage*100) / 25;
+	}
+	else
+	{
+		DS3Brightness = (goalCompletePercentage*100) / 25;
 		pwm_setDutyCycle(&htim2, TIM_CHANNEL_3, DS3Brightness);
 	}
 
@@ -36,21 +40,30 @@ void updateProgressLEDs(void) {
 	rgb_colour_on(RGB_GREEN);
 	rgb_colour_on(RGB_BLUE);
 
-	if (goalCompletePrecentage >= 50) {
+	if (goalCompletePercentage >= 50)
+	{
 		rgb_led_on(RGB_RIGHT);
-	} else {
+	}
+	else
+	{
 		rgb_led_off(RGB_RIGHT);
 	}
 
-	if (goalCompletePrecentage >= 75) {
+	if (goalCompletePercentage >= 75)
+	{
 		rgb_led_on(RGB_DOWN);
-	} else {
+	}
+	else
+	{
 		rgb_led_off(RGB_DOWN);
 	}
 
-	if (goalCompletePrecentage >= 100) {
+	if (goalCompletePercentage >= 100)
+	{
 		rgb_led_on(RGB_LEFT);
-	} else {
+	}
+	else
+	{
 		rgb_led_off(RGB_LEFT);
 	}
 

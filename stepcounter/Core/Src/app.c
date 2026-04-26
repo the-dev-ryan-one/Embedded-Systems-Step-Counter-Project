@@ -4,7 +4,6 @@
  * Authors: Ryan Teape, Felissa Chian
  * Date: 2026
  */
-//
 
 #include "app.h"
 #include "buttons.h"
