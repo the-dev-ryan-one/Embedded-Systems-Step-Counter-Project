@@ -15,6 +15,8 @@
 #include "app.h"
 
 #define STEP_LENGTH_IN_CM 80
+#define CM_PER_KM 100000
+#define YARDS_PER_KM 1094
 
 static char buffer[32];
 
@@ -106,7 +108,8 @@ static void displayGoalProgress(void)
 
 }
 
-static void displayDistanceTravelled(void) {
+static void displayDistanceTravelled(void)
+{
 
 	drawScreenHeader(" Distance Traveled ");
 
@@ -115,14 +118,14 @@ static void displayDistanceTravelled(void) {
 
 	if (distanceDisplayUnitsFlag)
 	{
-		uint32_t distWholeComponent = distInCm/100000;
+		uint32_t distWholeComponent = distInCm/CM_PER_KM;
 		uint32_t distFractComponent = (distInCm % 100000)/1000;
 		snprintf(buffer, sizeof(buffer), "%lu.%02lu km", distWholeComponent , distFractComponent);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	}
 	else
 	{
-		uint32_t disInYards = distInCm * 1094 / 100000;
+		uint32_t disInYards = distInCm * YARDS_PER_KM / CM_PER_KM;
 		snprintf(buffer, sizeof(buffer), "%lu yds", disInYards);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	}
