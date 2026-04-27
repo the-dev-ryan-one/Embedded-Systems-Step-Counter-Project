@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 extern uint16_t rawPotVal;
+extern uint16_t raw_adc[3];
 
 typedef enum {
 
@@ -29,13 +30,7 @@ typedef struct {
 } currJoyStickState;
 
 void joystick_task(void);
-
 const currJoyStickState* getCurrJoyStickState(void);
-
 void testModeJoyStickTask(void);
-
-uint16_t getJoyStickX (void);
-
-uint16_t getJoyStickY (void);
 
 #endif /* TASK_JOYSTICK_H */

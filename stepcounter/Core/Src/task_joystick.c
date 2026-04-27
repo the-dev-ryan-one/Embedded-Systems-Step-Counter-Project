@@ -5,12 +5,13 @@
  * Date: 2026
  */
 
+#include <stdbool.h>
 #include "adc.h"
 #include "app.h"
 #include "task_joystick.h"
 
+
 #define LONG_PRESS_TICKS 56
-#define RAW_POT_MIN 130
 #define ADC_REST_VAL_X 2203
 #define ADC_MAX_VAL_X 3835
 #define ADC_MIN_VAL_X 454
@@ -22,12 +23,10 @@
 #define Y_DEAD_ZONE_UP_BOUND 2679
 #define Y_DEAD_ZONE_LOWER_BOUND 1786
 #define MAX_STEP_INCREMENT 550
-#define ADC_INDEX_POT  0
 #define ADC_INDEX_JOY_Y 1
 #define ADC_INDEX_JOY_X 2
 
-static uint16_t raw_adc[3];
-uint16_t rawPotVal;
+uint16_t raw_adc[3];
 
 static currJoyStickState joyStick = {
     .xJoyDirection = JOY_REST,
@@ -36,33 +35,14 @@ static currJoyStickState joyStick = {
     .previousJoyYDirection = JOY_REST
 };
 
-uint16_t getJoyStickX (void)
+static uint16_t getJoyStickX (void)
 {
 	return raw_adc[ADC_INDEX_JOY_X];
 }
 
-uint16_t getJoyStickY (void)
+static uint16_t getJoyStickY (void)
 {
 	return raw_adc[ADC_INDEX_JOY_Y];
-}
-
-uint16_t getRawPotentiometerVal  (void)
-{
-	return raw_adc[ADC_INDEX_POT];
-}
-
-void potentiometer_task(void)
-{
-	rawPotVal = getRawPotentiometerVal();
-	newGoal = (float)(rawPotVal - RAW_POT_MIN) / (4095.0 - RAW_POT_MIN) * (15000 - 500) + 500;
-
-	if (rawPotVal < RAW_POT_MIN)
-	{
-		newGoal = 500;
-	}
-
-	newGoal = (newGoal/50)*50;
-
 }
 
 void testModeJoyStickTask(void)
@@ -134,7 +114,7 @@ void testModeJoyStickTask(void)
 
 }
 
-uint16_t calcPercentageXDisplacement(void)
+static uint16_t calcPercentageXDisplacement(void)
 {
 
 	joyStick.x = getJoyStickX();
@@ -162,7 +142,7 @@ const currJoyStickState* getCurrJoyStickState(void)
 	return &joyStick;
 }
 
-uint16_t calcPercentageYDisplacement(void)
+static uint16_t calcPercentageYDisplacement(void)
 {
 
 	joyStick.y = getJoyStickY();
@@ -185,7 +165,7 @@ uint16_t calcPercentageYDisplacement(void)
 
 }
 
-void setJoyYDirection(void)
+static void setJoyYDirection(void)
 {
 	if (joyStick.y < Y_DEAD_ZONE_LOWER_BOUND)
 	{
@@ -201,7 +181,7 @@ void setJoyYDirection(void)
 	}
 }
 
-void setJoyXDirection(void)
+static void setJoyXDirection(void)
 {
 
 	 if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
@@ -218,7 +198,7 @@ void setJoyXDirection(void)
 	 }
 }
 
-void toggleUnits(void)
+static void toggleUnits(void)
 {
 
 	if (inSetGoalState) return;
@@ -248,46 +228,40 @@ void toggleUnits(void)
 	joyStick.previousJoyYDirection = joyStick.yJoyDirection;
 }
 
-void cycleDisplayStates(void)
+static void cycleDisplayStates(void)
 {
 
 	if (inSetGoalState) return;
-
 	if (joyStick.x == 0) return;
 
-		 if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
-		 {
+	 if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
+	 {
+		joyStick.xJoyDirection = JOY_LEFT;
 
-			joyStick.xJoyDirection = JOY_LEFT;
-			if (joyStick.previousJoyXDirection == JOY_REST)
-			{
+		if (joyStick.previousJoyXDirection == JOY_REST)
+		{
 
-			currDisplayState = (currDisplayState + 2) % 3;
-			}
+		currDisplayState = (currDisplayState + 2) % 3;
+		}
+	 }
+	else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND)
+	{
+		joyStick.xJoyDirection = JOY_RIGHT;
 
-		 }
-
-		 	else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND)
-		 	{
-
-		 		joyStick.xJoyDirection = JOY_RIGHT;
-
-		 	if (joyStick.previousJoyXDirection == JOY_REST)
-		 	{
-			 currDisplayState = (currDisplayState + 1) % 3;
-		 	}
-
-		 	}
-		 	else
-		 	{
-			 joyStick.xJoyDirection = JOY_REST;
-		 }
-
-		 joyStick.previousJoyXDirection = joyStick.xJoyDirection;
+		if (joyStick.previousJoyXDirection == JOY_REST)
+		{
+		 currDisplayState = (currDisplayState + 1) % 3;
+		}
+	}
+	else
+	{
+	 joyStick.xJoyDirection = JOY_REST;
+	}
+	 joyStick.previousJoyXDirection = joyStick.xJoyDirection;
 
 }
 
-void handleJoyLongPress(void)
+static void handleJoyLongPress(void)
 {
 
 	if (currDisplayState != GoalProgress) return;
@@ -298,13 +272,13 @@ void handleJoyLongPress(void)
 	 if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1) == 1 )
 	 {
 
-		 joyStickPressCounter++;
+		joyStickPressCounter++;
 
-		 if (joyStickPressCounter >= LONG_PRESS_TICKS && !inSetGoalState &&!longPressHandled)
-		 {
-			 inSetGoalState = true;
-			 joyStickPressCounter = 0;
-			 longPressHandled = !longPressHandled;
+		if (joyStickPressCounter >= LONG_PRESS_TICKS && !inSetGoalState &&!longPressHandled)
+		{
+			inSetGoalState = true;
+			joyStickPressCounter = 0;
+			longPressHandled = !longPressHandled;
 		}
 		else if (joyStickPressCounter >= LONG_PRESS_TICKS && inSetGoalState && !longPressHandled)
 		{
@@ -327,17 +301,15 @@ void handleJoyLongPress(void)
 		 joyStickPressCounter = 0;
 		 longPressHandled = false;
 
-	 	 }
+	 }
 }
 
 void joystick_task(void)
 {
 
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 3);
-
 	joyStick.percentageXdisplacement = calcPercentageXDisplacement();
 	joyStick.percentageYdisplacement = calcPercentageYDisplacement();
-
 	setJoyXDirection();
 	setJoyYDirection();
 	toggleUnits();
