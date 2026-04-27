@@ -10,5 +10,8 @@
 
 /* updates OLED display */
 void display_task_execute(void);
+static void drawScreenHeader(const char* text);
+static void drawGoalCompleteScreen(void);
+static void drawSetGoalState(void);
 
-#endif
+#endif /* TASK_DISPLAY_H */

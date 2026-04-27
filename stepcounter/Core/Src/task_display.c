@@ -7,38 +7,56 @@
  */
 
 #include <stdio.h>
-#include "task_joystick.h"
-
+#include <string.h>
 #include "task_display.h"
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 #include "ssd1306_conf.h"
-#include "usart.h"
 #include "app.h"
-#include <string.h>
 
-char buffer[32];
+#define STEP_LENGTH_IN_CM 80
 
-void displayCurrentSteps(void) {
+static char buffer[32];
 
+static void drawScreenHeader(const char* text)
+{
 	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "-------------------");
-	ssd1306_WriteString(buffer, Font_7x10, White);
+	ssd1306_WriteString("-------------------", Font_7x10, White);
 
 	ssd1306_SetCursor(0, 11);
-	snprintf(buffer, sizeof(buffer), "  Current Steps  ");
+	snprintf(buffer, sizeof(buffer), "%s", text);
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
 	ssd1306_SetCursor(0, 21);
-	snprintf(buffer, sizeof(buffer), "-------------------");
-	ssd1306_WriteString(buffer, Font_7x10, White);
+	ssd1306_WriteString("-------------------", Font_7x10, White);
 
+}
+
+static void drawGoalCompleteScreen(void)
+{
+	ssd1306_SetCursor(10, 16);
+	ssd1306_WriteString("******************", Font_6x8, White);
+	ssd1306_SetCursor(10, 26);
+	ssd1306_WriteString("* Goal Complete! *", Font_6x8, White);
+	ssd1306_SetCursor(10, 36);
+	ssd1306_WriteString("******************", Font_6x8, White);
+	ssd1306_UpdateScreen();
+
+}
+
+static void displayCurrentSteps(void)
+{
+
+	drawScreenHeader("  Current Steps  ");
 	ssd1306_SetCursor(52, 40);
 
-	if (stepDisplayUnitsFlag) {
+	if (stepDisplayUnitsFlag)
+	{
 		snprintf(buffer, sizeof(buffer), "%u steps", steps);
 		ssd1306_WriteString(buffer, Font_7x10, White);
-	} else {
+	}
+	else
+	{
 		uint8_t goalPercentage = (uint32_t)steps * 100 / stepGoal;
 		snprintf(buffer, sizeof(buffer), "%u %%" , goalPercentage);
 		ssd1306_WriteString(buffer, Font_7x10, White);
@@ -46,101 +64,84 @@ void displayCurrentSteps(void) {
 
 }
 
-
-void displayGoalProgress(void) {
-
+static void drawSetGoalState(void)
+{
 	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "-------------------");
+	ssd1306_WriteString("-----Set Goal-----", Font_7x10, White);
+
+	ssd1306_SetCursor(24, 28);
+	snprintf(buffer, sizeof(buffer), "%u steps", newGoal);
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
-	ssd1306_SetCursor(0, 11);
-	snprintf(buffer, sizeof(buffer), "  Goal Progress  ");
-	ssd1306_WriteString(buffer, Font_7x10, White);
+	ssd1306_UpdateScreen();
+}
 
-	ssd1306_SetCursor(0, 21);
-	snprintf(buffer, sizeof(buffer), "-------------------");
-	ssd1306_WriteString(buffer, Font_7x10, White);
 
+static void displayGoalProgress(void)
+{
+
+	drawScreenHeader("  Goal Progress  ");
 	ssd1306_SetCursor(52, 40);
 
-	// make progress bar string
 	uint8_t goalProgressOutOfTen = ((float)steps / (float)stepGoal ) * 9;
-	if (goalProgressOutOfTen >= 9) goalProgressOutOfTen = 9;
+	if (goalProgressOutOfTen >= 9)
+	{
+		goalProgressOutOfTen = 9;
+	}
+
 	char progressBarString[13] = "[         ]";
-	for (uint8_t i=0 ; i<goalProgressOutOfTen ; i++ ) {
+	for (uint8_t i=0 ; i<goalProgressOutOfTen ; i++ )
+	{
 		progressBarString[i+1] = '=';
 	}
 	progressBarString[12] = '\0';
 
-		ssd1306_SetCursor(16, 32);
-		snprintf(buffer, sizeof(buffer), "%u / %u Steps", steps , stepGoal);
-		ssd1306_WriteString(buffer, Font_6x8, White);
+	ssd1306_SetCursor(16, 32);
+	snprintf(buffer, sizeof(buffer), "%u / %u Steps", steps , stepGoal);
+	ssd1306_WriteString(buffer, Font_6x8, White);
 
-		ssd1306_SetCursor(3, 46);
-		snprintf(buffer, sizeof(buffer), progressBarString);
-		ssd1306_WriteString(buffer, Font_11x18, White);
+	ssd1306_SetCursor(3, 46);
+	snprintf(buffer, sizeof(buffer),  "%s", progressBarString);
+	ssd1306_WriteString(buffer, Font_11x18, White);
+
 }
 
-void displayDistanceTravelled(void) {
+static void displayDistanceTravelled(void) {
 
-
-	ssd1306_SetCursor(0, 0);
-	snprintf(buffer, sizeof(buffer), "-------------------");
-	ssd1306_WriteString(buffer, Font_7x10, White);
-
-	ssd1306_SetCursor(0, 11);
-	snprintf(buffer, sizeof(buffer), " Distance Traveled ");
-	ssd1306_WriteString(buffer, Font_7x10, White);
-
-	ssd1306_SetCursor(0, 21);
-	snprintf(buffer, sizeof(buffer), "-------------------");
-	ssd1306_WriteString(buffer, Font_7x10, White);
+	drawScreenHeader(" Distance Traveled ");
 
 	ssd1306_SetCursor(52, 40);
+	uint32_t distInCm = (uint32_t)steps * STEP_LENGTH_IN_CM;
 
-	uint32_t distInCm = (uint32_t)steps * 80;
-	if (distanceDisplayUnitsFlag) {
+	if (distanceDisplayUnitsFlag)
+	{
 		uint32_t distWholeComponent = distInCm/100000;
 		uint32_t distFractComponent = (distInCm % 100000)/1000;
 		snprintf(buffer, sizeof(buffer), "%lu.%02lu km", distWholeComponent , distFractComponent);
 		ssd1306_WriteString(buffer, Font_7x10, White);
-	} else {
+	}
+	else
+	{
 		uint32_t disInYards = distInCm * 1094 / 100000;
 		snprintf(buffer, sizeof(buffer), "%lu yds", disInYards);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	}
+
 }
 
 void display_task_execute(void) {
 
-	const currJoyStickState* joyStick = getCurrJoyStickState();
-
 	ssd1306_Fill(Black);
 
-	if (goalCompleteFlag) {
-
-		ssd1306_SetCursor(10, 16);
-		ssd1306_WriteString("******************", Font_6x8, White);
-		ssd1306_SetCursor(10, 26);
-		ssd1306_WriteString("* Goal Complete! *", Font_6x8, White);
-		ssd1306_SetCursor(10, 36);
-		ssd1306_WriteString("******************", Font_6x8, White);
-
-		ssd1306_UpdateScreen();
+	if (goalCompleteFlag)
+	{
+		drawGoalCompleteScreen();
 		return;
 	}
 
-
-	if (inSetGoalState) {
-		ssd1306_SetCursor(0, 0);
-		snprintf(buffer, sizeof(buffer), "-----Set Goal-----" );
-		ssd1306_WriteString(buffer, Font_7x10, White);
-
-		ssd1306_SetCursor(24, 28);
-		snprintf(buffer, sizeof(buffer), "%u steps", newGoal);
-		ssd1306_WriteString(buffer, Font_7x10, White);
-
-		ssd1306_UpdateScreen();
+	if (inSetGoalState)
+	{
+		drawSetGoalState();
 		return;
 	}
 
@@ -158,17 +159,5 @@ void display_task_execute(void) {
 	}
 
 	ssd1306_UpdateScreen();
-
-    if (serialDebugFlag) {
-
-    	snprintf(buffer, sizeof(buffer), "Joy X : %s %u", joyStick->xJoyDirection , joyStick->x);
-
-    	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-    	HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
-
-    	snprintf(buffer, sizeof(buffer), "Joy Y : %s %u", joyStick->yJoyDirection , joyStick->y);
-        HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), 100);
-        HAL_UART_Transmit(&huart2, (uint8_t*)"\r\n", 2, 100);
-    }
 
 }

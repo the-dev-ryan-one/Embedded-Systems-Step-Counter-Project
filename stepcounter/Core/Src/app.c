@@ -9,8 +9,8 @@
 #include "buttons.h"
 #include "imu_lsm6ds.h"
 #include <stdbool.h>
+#include <task_LED.h>
 #include "task_joystick.h"
-#include "task_blinky.h"
 #include "task_button.h"
 #include "task_display.h"
 #include "ssd1306.h"
