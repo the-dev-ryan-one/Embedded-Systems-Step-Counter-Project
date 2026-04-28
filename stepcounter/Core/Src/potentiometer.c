@@ -26,11 +26,14 @@ static uint16_t getRawPotentiometerVal  (void)
 void potentiometer_task(void)
 {
 	rawPotVal = getRawPotentiometerVal();
-	newGoal = (float)(rawPotVal - RAW_POT_MIN) / (MAX_ADC - RAW_POT_MIN) * (MAX_GOAL - MIN_GOAL) + MIN_GOAL;
 
 	if (rawPotVal < RAW_POT_MIN)
 	{
 		newGoal = MIN_GOAL;
+	}
+	else
+	{
+		newGoal = (float)(rawPotVal - RAW_POT_MIN) / (MAX_ADC - RAW_POT_MIN) * (MAX_GOAL - MIN_GOAL) + MIN_GOAL;
 	}
 
 	newGoal = (newGoal/GOAL_INCREMENT_SIZE)*GOAL_INCREMENT_SIZE;
