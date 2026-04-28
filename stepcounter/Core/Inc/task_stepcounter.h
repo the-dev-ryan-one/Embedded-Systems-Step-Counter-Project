@@ -13,7 +13,6 @@
 
 // in task_stepcounter.h
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
-
 void checkGoalComplete(void);
 
 #endif /* TASK_STEPCOUNTER_H */

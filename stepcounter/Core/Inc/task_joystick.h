@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-extern uint16_t rawPotVal;
 extern uint16_t raw_adc[3];
 
 typedef enum {

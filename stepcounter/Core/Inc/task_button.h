@@ -5,15 +5,9 @@
  * Date: 2026
  */
 
-#ifndef task_button_h
-#define task_button_h
+#ifndef TASK_BUTTON_H
+#define TASK_BUTTON_H
 
-/* polls buttons and triggers necessary actions  */
 void button_task_execute(void);
 
-/* Initialises the PWM */
-void initialisePWM(void);
-
-void resetSW2PressesAfterDelay(void);
-
-#endif
+#endif /*TASK_BUTTON_H*/

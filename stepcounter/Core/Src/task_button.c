@@ -18,7 +18,7 @@ static uint8_t dutyCycle = 0;
 static uint32_t firstSW2press = 0;
 static uint8_t consecutiveSW2Presses = 0;
 
-void SW1PressEvent(void) {
+static void SW1PressEvent(void) {
 
     dutyCycle += 10;
     if (dutyCycle > 100)
@@ -49,8 +49,6 @@ void button_task_execute(void)
 	{
 
 		serialDebugFlag = !serialDebugFlag;
-
-		consecutiveSW2Presses++;
 
 	    if (consecutiveSW2Presses == 0)
 	    {

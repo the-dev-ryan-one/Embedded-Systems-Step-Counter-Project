@@ -1,8 +1,5 @@
 /*
  * task_display.c
- * Display task module - updates the OLED screen with joystick values
- * and optionally outputs debug info over UART
- * Authors: Ryan Teape, Felissa Chian
  * Date: 2026
  */
 
@@ -42,7 +39,6 @@ static void drawGoalCompleteScreen(void)
 	ssd1306_WriteString("* Goal Complete! *", Font_6x8, White);
 	ssd1306_SetCursor(10, 36);
 	ssd1306_WriteString("******************", Font_6x8, White);
-	ssd1306_UpdateScreen();
 
 }
 
@@ -75,7 +71,6 @@ static void drawSetGoalState(void)
 	snprintf(buffer, sizeof(buffer), "%u steps", newGoal);
 	ssd1306_WriteString(buffer, Font_7x10, White);
 
-	ssd1306_UpdateScreen();
 }
 
 
@@ -119,7 +114,7 @@ static void displayDistanceTravelled(void)
 	if (distanceDisplayUnitsFlag)
 	{
 		uint32_t distWholeComponent = distInCm/CM_PER_KM;
-		uint32_t distFractComponent = (distInCm % 100000)/1000;
+		uint32_t distFractComponent = (distInCm % CM_PER_KM)/1000;
 		snprintf(buffer, sizeof(buffer), "%lu.%02lu km", distWholeComponent , distFractComponent);
 		ssd1306_WriteString(buffer, Font_7x10, White);
 	}
@@ -139,12 +134,14 @@ void display_task_execute(void) {
 	if (goalCompleteFlag)
 	{
 		drawGoalCompleteScreen();
+		ssd1306_UpdateScreen();
 		return;
 	}
 
 	if (inSetGoalState)
 	{
 		drawSetGoalState();
+		ssd1306_UpdateScreen();
 		return;
 	}
 

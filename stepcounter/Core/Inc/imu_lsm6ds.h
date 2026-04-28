@@ -132,12 +132,8 @@ typedef enum {
 } imu_register_t;
 
 
-
-// turn on the IMU
 #define CTRL1_XL_HIGH_PERFORMANCE 0b00100000U
-// enable the stepcounter algo , not the last 1 is for reseting the step count.
 #define ENABLE_STEPCOUNTER 0b00010110U
-
 #define ENABLE_INTERRUPT_ON_INT1 0b10000000U
 #define ENABLE_TAP_CFG 0b10000000U
 

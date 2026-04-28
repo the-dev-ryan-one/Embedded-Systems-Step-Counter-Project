@@ -1,16 +1,6 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stdint.h>
-
-typedef struct {
-
-	int16_t x;
-	int16_t y;
-	int16_t z;
-
-} AccelVec;
+#ifndef ACCELEROMETER_H
+#define ACCELEROMETER_H
 
 void initIMU(void);
 
-int16_t fetchAndConcatXAcell(void);
+#endif /* ACCELEROMETER_H */

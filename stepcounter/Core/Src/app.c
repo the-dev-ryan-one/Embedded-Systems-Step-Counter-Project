@@ -17,6 +17,7 @@
 #include "usart.h"
 #include "pwm.h"
 #include "task_stepcounter.h"
+#include "potentiometer.h"
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)

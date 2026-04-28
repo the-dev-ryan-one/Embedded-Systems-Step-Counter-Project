@@ -16,7 +16,7 @@
 #define GOAL_INCREMENT_SIZE 50
 #define RAW_POT_MIN 130
 
-uint16_t rawPotVal;
+static uint16_t rawPotVal;
 
 static uint16_t getRawPotentiometerVal  (void)
 {

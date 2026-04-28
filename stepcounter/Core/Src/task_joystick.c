@@ -87,7 +87,7 @@ void testModeJoyStickTask(void)
 
 	if (joyStick.y > Y_DEAD_ZONE_UP_BOUND)
 	{
-
+		__disable_irq();
 		if (steps <= incrementVal)
 		{
 			steps = 0;
@@ -96,20 +96,22 @@ void testModeJoyStickTask(void)
 		{
 			steps -=  incrementVal;
 		}
+		__enable_irq();
 
 	}
 
 	if (joyStick.y < Y_DEAD_ZONE_LOWER_BOUND)
 	{
+		__disable_irq();
 		if ((steps + incrementVal) <= (stepGoal - 10))
 		{
 			steps += incrementVal;
 		}
-		if ((steps + incrementVal) > (stepGoal - 10))
+		else
 		{
 			steps = (stepGoal - 10);
 		}
-
+		__enable_irq();
 	}
 
 }
