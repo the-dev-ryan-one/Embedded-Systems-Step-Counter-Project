@@ -1,8 +1,9 @@
 /*
  * task_blinky.c
- * Blinky task module - toggles the onboard LED
+ * Blinky task module - toggles the onboard LED and updates progress LEDs
+ * based on step goal completion percentage.
  * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
+ * Date: 12/03/2026
  */
 
 #include "task_LED.h"
@@ -25,6 +26,7 @@ void updateProgressLEDs(void)
 	uint8_t goalCompletePercentage = (steps * 100) / (stepGoal);
 	uint8_t DS3Brightness;
 
+	// ramp DS3 LED brightness up to 100% as goal approaches 25%
 	if (goalCompletePercentage >= 25)
 	{
 		DS3Brightness = 100;
@@ -40,6 +42,7 @@ void updateProgressLEDs(void)
 	rgb_colour_on(RGB_GREEN);
 	rgb_colour_on(RGB_BLUE);
 
+	// turn on additional RGB LEDs at 50%, 75%, and 100% goal completion
 	if (goalCompletePercentage >= 50)
 	{
 		rgb_led_on(RGB_RIGHT);
