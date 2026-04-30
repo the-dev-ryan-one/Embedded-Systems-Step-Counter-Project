@@ -1,8 +1,16 @@
+/*
+ * task_joystick.h
+ * Header for joystick task module - reads joystick position and direction
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 2026
+ */
+
 #ifndef TASK_JOYSTICK_H
 #define TASK_JOYSTICK_H
 
 #include <stdint.h>
 
+// shared ADC buffer for potentiometer & joystick X/Y readings via DMA
 extern uint16_t raw_adc[3];
 
 typedef enum {

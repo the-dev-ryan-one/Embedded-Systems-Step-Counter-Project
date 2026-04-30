@@ -1,8 +1,10 @@
 /*
  * task_joystick.c
- * Joystick task module - reads X and Y axis ADC values using DMA
+ * Joystick task module - reads X and Y axis ADC values using DMA,
+ * maps them to directions, and handles display cycling, unit toggling,
+ * and long press goal setting.
  * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
+ * Date: 12/03/2026
  */
 
 #include <stdbool.h>
@@ -11,18 +13,18 @@
 #include "task_joystick.h"
 
 
-#define LONG_PRESS_TICKS 56
-#define ADC_REST_VAL_X 2203
+#define LONG_PRESS_TICKS 56 // number of task ticks before a press is considered long
+#define ADC_REST_VAL_X 2203 
 #define ADC_MAX_VAL_X 3835
 #define ADC_MIN_VAL_X 454
-#define X_DEAD_ZONE_UP_BOUND 2864
-#define X_DEAD_ZONE_LOWER_BOUND 1542
+#define X_DEAD_ZONE_UP_BOUND 2864 // X values above this are treated as left
+#define X_DEAD_ZONE_LOWER_BOUND 1542 // X values below this are treated as right
 #define ADC_REST_VAL_Y 2233
 #define ADC_MAX_VAL_Y 3900
 #define ADC_MIN_VAL_Y 343
 #define Y_DEAD_ZONE_UP_BOUND 2679
 #define Y_DEAD_ZONE_LOWER_BOUND 1786
-#define MAX_STEP_INCREMENT 550
+#define MAX_STEP_INCREMENT 550 // Maximum steps added/removed per tick in test mode
 #define ADC_INDEX_JOY_Y 1
 #define ADC_INDEX_JOY_X 2
 
@@ -52,6 +54,7 @@ void testModeJoyStickTask(void)
 	if (!testStateFlag) return;
 	int32_t incrementVal = 0;
 
+	// Map Y displacement percentage to a step increment using non-linear scaling
 	if (joyStick.percentageYdisplacement < 4)
 	{
 	    incrementVal = 0;
@@ -78,6 +81,7 @@ void testModeJoyStickTask(void)
 	}
 	else if (joyStick.percentageYdisplacement < 95)
 	{
+		// Scale increment between 25 and MAX_STEP_INCREMENT for upper displacement range
 	    incrementVal = 25 + (joyStick.percentageYdisplacement - 71) * 225 / 24;
 	}
 	else
@@ -85,6 +89,7 @@ void testModeJoyStickTask(void)
 	    incrementVal = MAX_STEP_INCREMENT;
 	}
 
+	// Joystick pushed up: decrement steps, minimum is 0
 	if (joyStick.y > Y_DEAD_ZONE_UP_BOUND)
 	{
 		__disable_irq();
@@ -100,6 +105,7 @@ void testModeJoyStickTask(void)
 
 	}
 
+	// Joystick pushed down: increment steps, maximum is just below goal
 	if (joyStick.y < Y_DEAD_ZONE_LOWER_BOUND)
 	{
 		__disable_irq();
@@ -121,6 +127,7 @@ static uint16_t calcPercentageXDisplacement(void)
 
 	joyStick.x = getJoyStickX();
 
+	// Calculate displacement relative to rest position in each direction
 	if (joyStick.x > ADC_REST_VAL_X)
 	{
 		joyStick.percentageXdisplacement = (joyStick.x - ADC_REST_VAL_X)*100 / (ADC_MAX_VAL_X - ADC_REST_VAL_X);
@@ -149,6 +156,7 @@ static uint16_t calcPercentageYDisplacement(void)
 
 	joyStick.y = getJoyStickY();
 
+	// Calculate displacement relative to rest position in each direction
 	if (joyStick.y > ADC_REST_VAL_Y)
 	{
 		joyStick.percentageYdisplacement = (joyStick.y - ADC_REST_VAL_Y)*100 / (ADC_MAX_VAL_Y - ADC_REST_VAL_Y);
@@ -171,11 +179,11 @@ static void setJoyYDirection(void)
 {
 	if (joyStick.y < Y_DEAD_ZONE_LOWER_BOUND)
 	{
-			joyStick.yJoyDirection = JOY_UP;
+		joyStick.yJoyDirection = JOY_UP;
 	}
 	else if (joyStick.y > Y_DEAD_ZONE_UP_BOUND)
 	{
-			 joyStick.yJoyDirection = JOY_DOWN;
+		joyStick.yJoyDirection = JOY_DOWN;
 	}
 	else
 	{
@@ -188,15 +196,15 @@ static void setJoyXDirection(void)
 
 	 if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
 	 {
-		 joyStick.xJoyDirection = JOY_LEFT;
+		joyStick.xJoyDirection = JOY_LEFT;
 	 }
 	 else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND)
 	 {
-		 joyStick.xJoyDirection = JOY_RIGHT;
+		joyStick.xJoyDirection = JOY_RIGHT;
 	 }
 	 else
 	 {
-		 joyStick.xJoyDirection = JOY_REST;
+		joyStick.xJoyDirection = JOY_REST;
 	 }
 }
 
@@ -208,18 +216,18 @@ static void toggleUnits(void)
 
 	if (joyStick.yJoyDirection == JOY_UP)
 	{
-
-		 if (joyStick.previousJoyYDirection == JOY_REST)
-		 {
-			 if (currDisplayState == DistanceTravelled)
-			 {
-				 distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
-			 }
-			 if (!testStateFlag && (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) )
-			 {
-				 stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
-			 }
-		 }
+		// only toggle on the initial upward movement, not while held
+		if (joyStick.previousJoyYDirection == JOY_REST)
+		{
+			if (currDisplayState == DistanceTravelled)
+			{
+				distanceDisplayUnitsFlag = !distanceDisplayUnitsFlag;
+			}
+			if (!testStateFlag && (currDisplayState == GoalProgress || currDisplayState == CurrentSteps) )
+			{
+				stepDisplayUnitsFlag = !stepDisplayUnitsFlag;
+			}
+		}
 
 		}
 		else
@@ -236,8 +244,9 @@ static void cycleDisplayStates(void)
 	if (inSetGoalState) return;
 	if (joyStick.x == 0) return;
 
-	 if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
-	 {
+	// only cycle on initial movement to prevent continuous cycling while held
+	if (joyStick.x > X_DEAD_ZONE_UP_BOUND)
+	{
 		joyStick.xJoyDirection = JOY_LEFT;
 
 		if (joyStick.previousJoyXDirection == JOY_REST)
@@ -245,7 +254,7 @@ static void cycleDisplayStates(void)
 
 		currDisplayState = (currDisplayState + 2) % 3;
 		}
-	 }
+	}
 	else if (joyStick.x < X_DEAD_ZONE_LOWER_BOUND)
 	{
 		joyStick.xJoyDirection = JOY_RIGHT;
@@ -276,12 +285,14 @@ static void handleJoyLongPress(void)
 
 		joyStickPressCounter++;
 
+		// first long press: enter goal setting state
 		if (joyStickPressCounter >= LONG_PRESS_TICKS && !inSetGoalState &&!longPressHandled)
 		{
 			inSetGoalState = true;
 			joyStickPressCounter = 0;
 			longPressHandled = !longPressHandled;
 		}
+		// second long press: confirm and apply new goal
 		else if (joyStickPressCounter >= LONG_PRESS_TICKS && inSetGoalState && !longPressHandled)
 		{
 			stepGoal = newGoal;
@@ -293,23 +304,22 @@ static void handleJoyLongPress(void)
 	 }
 	 else
 	 {
+		// Short press while in goal state: cancel goal setting
+		if (joyStickPressCounter > 0 && inSetGoalState && !longPressHandled)
+		{
+			inSetGoalState = false;
+			joyStickPressCounter = 0;
+		}
 
-		 if (joyStickPressCounter > 0 && inSetGoalState && !longPressHandled)
-		 {
-			 inSetGoalState = false;
-			 joyStickPressCounter = 0;
-		 }
-
-		 joyStickPressCounter = 0;
-		 longPressHandled = false;
+		joyStickPressCounter = 0;
+		longPressHandled = false;
 
 	 }
 }
 
 void joystick_task(void)
 {
-
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 3);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)raw_adc, 3); // triggers ADC conversion for all 3 channels via DMA
 	joyStick.percentageXdisplacement = calcPercentageXDisplacement();
 	joyStick.percentageYdisplacement = calcPercentageYDisplacement();
 	setJoyXDirection();
@@ -317,5 +327,4 @@ void joystick_task(void)
 	toggleUnits();
 	cycleDisplayStates();
 	handleJoyLongPress();
-
 }
