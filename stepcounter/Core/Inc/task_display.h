@@ -2,7 +2,7 @@
  * task_display.h
  * Header file for the display task module
  * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
+ * Date: 13/03/2026
  */
 
 #ifndef TASK_DISPLAY_H

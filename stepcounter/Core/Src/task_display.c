@@ -1,6 +1,9 @@
 /*
  * task_display.c
- * Date: 2026
+ * Renders different OLED screens based on application state,
+ * including step count, goal progress, and distance travelled
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 13/03/2026
  */
 
 #include <stdio.h>
@@ -48,6 +51,7 @@ static void displayCurrentSteps(void)
 	drawScreenHeader("  Current Steps  ");
 	ssd1306_SetCursor(52, 40);
 
+	// display steps as raw count or percentage of goal based on unit flag
 	if (stepDisplayUnitsFlag)
 	{
 		snprintf(buffer, sizeof(buffer), "%u steps", steps);
@@ -80,12 +84,14 @@ static void displayGoalProgress(void)
 	drawScreenHeader("  Goal Progress  ");
 	ssd1306_SetCursor(52, 40);
 
+	// scale progress to 0-9 for the progress bar
 	uint8_t goalProgressOutOfTen = ((float)steps / (float)stepGoal ) * 9;
 	if (goalProgressOutOfTen >= 9)
 	{
 		goalProgressOutOfTen = 9;
 	}
 
+	// build progress bar string by filling '=' characters from left
 	char progressBarString[13] = "[         ]";
 	for (uint8_t i=0 ; i<goalProgressOutOfTen ; i++ )
 	{
@@ -111,6 +117,7 @@ static void displayDistanceTravelled(void)
 	ssd1306_SetCursor(52, 40);
 	uint32_t distInCm = (uint32_t)steps * STEP_LENGTH_IN_CM;
 
+	// display distance in km or yards based on unit flag
 	if (distanceDisplayUnitsFlag)
 	{
 		uint32_t distWholeComponent = distInCm/CM_PER_KM;
@@ -131,6 +138,7 @@ void display_task_execute(void) {
 
 	ssd1306_Fill(Black);
 
+	// priority screens: goal complete and set goal override normal display
 	if (goalCompleteFlag)
 	{
 		drawGoalCompleteScreen();
