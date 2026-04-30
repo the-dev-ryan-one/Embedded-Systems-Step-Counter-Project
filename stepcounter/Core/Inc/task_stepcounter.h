@@ -1,8 +1,8 @@
 /*
  * task_stepcounter.h
- *
- *  Created on: 14/04/2026
- *      Author: Uni
+ * Header for step counter task - handles step interrupts and goal completion alerts
+ * Authors: Ryan Teape, Felissa Chian
+ * Date: 14/04/2026
  */
 
 #include <stdbool.h>
@@ -11,7 +11,6 @@
 #ifndef TASK_STEPCOUNTER_H
 #define TASK_STEPCOUNTER_H
 
-// in task_stepcounter.h
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
 void checkGoalComplete(void);
 
