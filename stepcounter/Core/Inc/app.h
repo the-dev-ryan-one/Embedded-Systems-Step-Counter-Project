@@ -2,7 +2,7 @@
  * app.h
  * Header file for the main application module
  * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
+ * Date: 26/02/2026
  */
 
 #ifndef APP_H
@@ -12,7 +12,6 @@
 #include "rgb.h"
 #include <stdbool.h>
 
-/* flag to toggle for serial debug */
 extern bool serialDebugFlag;
 extern bool testStateFlag;
 extern volatile bool clearInteruptFlag;
@@ -33,7 +32,6 @@ extern bool stepDisplayUnitsFlag;
 extern bool goalCompleteFlag;
 extern bool inSetGoalState;
 extern displayState currDisplayState;
-
 
 void app_main(void);
 

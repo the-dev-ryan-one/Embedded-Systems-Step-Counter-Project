@@ -2,7 +2,7 @@
  * app.c
  * Main application module - initialises peripherals and runs the task scheduler
  * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
+ * Date: 26/02/2026
  */
 
 #include "app.h"
@@ -59,7 +59,7 @@ bool testStateFlag = false;
 bool goalCompleteFlag = false;
 volatile bool clearInteruptFlag = false;
 
-// reset Values
+// default values on startup
 uint16_t stepGoal = 1000;
 volatile uint16_t steps = 0;
 uint16_t newGoal = 500;
@@ -71,6 +71,7 @@ bool stepDisplayUnitsFlag = false;
 
 void app_main(void) {
 
+	// stagger initial task run times to avoid all tasks firing at once
 	BlinkyNextRun = HAL_GetTick() + BLINKY_PERIOD_TICKS;
 	ButtonNextRun = HAL_GetTick() + BUTTON_PERIOD_TICKS;
 	JoystickNextRun = HAL_GetTick() + JOYSTICK_PERIOD_TICKS;
@@ -86,6 +87,7 @@ void app_main(void) {
 	initialisePWM();
 	initIMU();
 
+	// run each task at its scheduled frequency using tick-based scheduling
     while(1)
     	{
     	  uint32_t ticks = HAL_GetTick();
@@ -143,6 +145,3 @@ void app_main(void) {
     	}
 
 }
-
-
-
