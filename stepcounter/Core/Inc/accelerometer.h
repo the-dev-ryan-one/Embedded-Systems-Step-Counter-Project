@@ -8,6 +8,7 @@
 #ifndef ACCELEROMETER_H
 #define ACCELEROMETER_H
 
+// initialises LSM6DS IMU for accelerometer, step counting, and tap detection
 void initIMU(void);
 
 #endif /* ACCELEROMETER_H */

@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-// Increments step count on rising edge interrupt from IMU INT1 pin
+// increments step count on rising edge interrupt from IMU INT1 pin
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
 
 void checkGoalComplete(void);

@@ -8,7 +8,7 @@
 #ifndef TASK_DISPLAY_H
 #define TASK_DISPLAY_H
 
-/* updates OLED display */
+// updates OLED display
 void display_task_execute(void);
 
 #endif /* TASK_DISPLAY_H */

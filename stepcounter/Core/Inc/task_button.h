@@ -8,6 +8,7 @@
 #ifndef TASK_BUTTON_H
 #define TASK_BUTTON_H
 
+// handles button presses for LED brightness, step simulation, and test mode toggle
 void button_task_execute(void);
 
 #endif /*TASK_BUTTON_H*/
