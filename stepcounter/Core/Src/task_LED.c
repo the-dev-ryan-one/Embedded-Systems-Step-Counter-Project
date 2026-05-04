@@ -1,6 +1,6 @@
 /*
- * task_blinky.c
- * Blinky task module - toggles the onboard LED and updates progress LEDs
+ * task_LED.c
+ * LED task module - toggles the onboard LED and updates progress LEDs
  * based on step goal completion percentage.
  * Authors: Ryan Teape, Felissa Chian
  * Date: 12/03/2026

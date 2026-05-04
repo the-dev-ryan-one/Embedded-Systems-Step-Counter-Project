@@ -25,8 +25,8 @@ typedef enum {
 
 typedef struct {
 
-	uint16_t x;
-	uint16_t y;
+	uint16_t x; // raw ADC value for X axis
+	uint16_t y; // raw ADC value for Y axis
 	uint16_t percentageXdisplacement;
 	uint16_t percentageYdisplacement;
 	joyStickDirections xJoyDirection;
@@ -36,8 +36,13 @@ typedef struct {
 
 } currJoyStickState;
 
+// reads joystick ADC values and updates direction, display state, units, and goal setting
 void joystick_task(void);
+
+// returns a pointer to the current joystick state
 const currJoyStickState* getCurrJoyStickState(void);
+
+// increments or decrements steps based on joystick Y position, only active in test mode
 void testModeJoyStickTask(void);
 
 #endif /* TASK_JOYSTICK_H */

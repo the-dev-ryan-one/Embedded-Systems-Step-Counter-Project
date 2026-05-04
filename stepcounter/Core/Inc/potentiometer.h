@@ -5,10 +5,10 @@
  * Date: 28/04/2026
  */
 
-#ifndef INC_POTENTIOMETER_H_
-#define INC_POTENTIOMETER_H_
+#ifndef POTENTIOMETER_H
+#define POTENTIOMETER_H
 
-// Reads the potentiometer ADC value and updates the current step goal
+// reads the potentiometer ADC value and updates the current step goal
 void potentiometer_task(void);
 
-#endif /* INC_POTENTIOMETER_H_ */
+#endif /* POTENTIOMETER_H */

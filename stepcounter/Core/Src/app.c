@@ -8,8 +8,7 @@
 #include "app.h"
 #include "buttons.h"
 #include "imu_lsm6ds.h"
-#include <stdbool.h>
-#include <task_LED.h>
+#include "task_LED.h"
 #include "task_joystick.h"
 #include "task_button.h"
 #include "task_display.h"

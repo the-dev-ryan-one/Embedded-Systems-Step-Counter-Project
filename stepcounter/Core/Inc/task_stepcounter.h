@@ -5,13 +5,14 @@
  * Date: 14/04/2026
  */
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #ifndef TASK_STEPCOUNTER_H
 #define TASK_STEPCOUNTER_H
 
+#include <stdint.h>
+
+// Increments step count on rising edge interrupt from IMU INT1 pin
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
+
 void checkGoalComplete(void);
 
 #endif /* TASK_STEPCOUNTER_H */
