@@ -17,6 +17,7 @@
 #include "pwm.h"
 #include "task_stepcounter.h"
 #include "potentiometer.h"
+#include "accelerometer.h"
 
 #define TICK_FREQUENCY_HZ 1000
 #define HZ_TO_TICKS(FREQUENCY_HZ) (TICK_FREQUENCY_HZ/FREQUENCY_HZ)
@@ -25,11 +26,10 @@
 #define BUTTON_FREQUENCY_HZ 56
 #define JOYSTICK_FREQUENCY_HZ 56
 #define DISPLAY_FREQUENCY_HZ 4
-#define POTENTIOMETER_FREQUENCY_HZ 30
+#define POTENTIOMETER_FREQUENCY_HZ 8
 #define TESTMODE_FREQUENCY_HZ 6
 #define CHECKGOALCOMPLETE_FREQUENCY_HZ 4
 #define PROGRESSLEDS_FREQUENCY_HZ 4
-#define FETCHACCEL_FREQUENCY_HZ 10
 
 #define BLINKY_PERIOD_TICKS        HZ_TO_TICKS(BLINKY_FREQUENCY_HZ)
 #define BUTTON_PERIOD_TICKS        HZ_TO_TICKS(BUTTON_FREQUENCY_HZ)
@@ -39,7 +39,6 @@
 #define TESTMODE_PERIOD_TICKS      HZ_TO_TICKS(TESTMODE_FREQUENCY_HZ)
 #define CHECKGOALCOMPLETE_PERIOD_TICKS HZ_TO_TICKS(CHECKGOALCOMPLETE_FREQUENCY_HZ)
 #define PROGRESSLEDS_PERIOD_TICKS  HZ_TO_TICKS(PROGRESSLEDS_FREQUENCY_HZ)
-#define FETCHACCEL_PERIOD_TICKS HZ_TO_TICKS(FETCHACCEL_FREQUENCY_HZ)
 
 static uint32_t BlinkyNextRun = 0;
 static uint32_t ButtonNextRun = 0;
@@ -50,7 +49,6 @@ static uint32_t TestModeNextRun = 0;
 
 static uint32_t CheckGoalCompleteNextRun = 0;
 static uint32_t ProgressLEDsNextRun = 0;
-static uint32_t FetchAccelNextRun = 0;
 
 bool inSetGoalState = false;
 bool serialDebugFlag = false;
@@ -79,7 +77,6 @@ void app_main(void) {
 	TestModeNextRun = HAL_GetTick() + TESTMODE_PERIOD_TICKS;
 	CheckGoalCompleteNextRun = HAL_GetTick() + CHECKGOALCOMPLETE_PERIOD_TICKS;
 	ProgressLEDsNextRun = HAL_GetTick() + PROGRESSLEDS_PERIOD_TICKS;
-	FetchAccelNextRun = HAL_GetTick() + FETCHACCEL_PERIOD_TICKS;
 
 	buttons_init();
 	ssd1306_Init();
