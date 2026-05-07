@@ -7,7 +7,8 @@
 
 #include "adc.h"
 #include "app.h"
-#include "task_joystick.h"
+#include "task_joystick.h" // provides access to raw_adc[]
+#include "potentiometer.h"
 
 #define ADC_INDEX_POT  0
 #define MAX_GOAL 15000

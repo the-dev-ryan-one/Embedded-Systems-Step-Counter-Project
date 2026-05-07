@@ -5,7 +5,6 @@
  * Date: 14/04/2026
  */
  
-#include <stdbool.h>
 #include "task_stepcounter.h"
 #include "app.h"
 #include "tim.h"

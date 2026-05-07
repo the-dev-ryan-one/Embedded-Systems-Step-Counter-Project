@@ -7,7 +7,6 @@
  * Date: 12/03/2026
  */
 
-#include <stdbool.h>
 #include "adc.h"
 #include "app.h"
 #include "task_joystick.h"

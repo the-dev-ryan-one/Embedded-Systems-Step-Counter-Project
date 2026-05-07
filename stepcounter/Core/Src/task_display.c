@@ -18,7 +18,6 @@
 #define CM_PER_KM 100000
 #define YARDS_PER_KM 1094
 
-
 static void drawScreenHeader(const char* text)
 {
 	char buffer[32];
@@ -133,7 +132,13 @@ static void displayDistanceTravelled(void)
 
 }
 
-void display_task_execute(void) {
+void screenInit(void)
+{
+	ssd1306_Init();
+}
+
+void display_task_execute(void)
+{
 
 	ssd1306_Fill(Black);
 

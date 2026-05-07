@@ -10,9 +10,7 @@
 
 #include <stdint.h>
 
-// increments step count on rising edge interrupt from IMU INT1 pin
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
-
+// notify user if goal is complete
 void checkGoalComplete(void);
 
 #endif /* TASK_STEPCOUNTER_H */

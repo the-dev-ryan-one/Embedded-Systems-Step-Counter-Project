@@ -2,7 +2,7 @@
  * task_joystick.h
  * Header for joystick task module - reads joystick position and direction
  * Authors: Ryan Teape, Felissa Chian
- * Date: 2026
+ * Date: 07/05/2026
  */
 
 #ifndef TASK_JOYSTICK_H

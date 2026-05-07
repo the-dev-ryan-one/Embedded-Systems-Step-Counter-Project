@@ -11,7 +11,6 @@
 #include "task_joystick.h"
 #include "task_button.h"
 #include "task_display.h"
-#include "ssd1306.h"
 #include "pwm.h"
 #include "task_stepcounter.h"
 #include "potentiometer.h"
@@ -77,7 +76,7 @@ void app_main(void) {
 	ProgressLEDsNextRun = HAL_GetTick() + PROGRESSLEDS_PERIOD_TICKS;
 
 	buttons_init();
-	ssd1306_Init();
+	screenInit();
 	initialisePWM();
 	initIMU();
 
