@@ -5,9 +5,7 @@
  * Date: 12/03/2026
  */
 
-#include "rgb.h"
 #include "pwm.h"
-#include "tim.h"
 #include "buttons.h"
 #include "app.h"
 #include "task_button.h"
@@ -49,8 +47,6 @@ void button_task_execute(void)
 
 	if (buttons_checkButton (DOWN) == PUSHED)
 	{
-
-		serialDebugFlag = !serialDebugFlag;
 
 		// detect double press within SW2PressWindow ms to toggle test state
 	    if (consecutiveSW2Presses == 0)

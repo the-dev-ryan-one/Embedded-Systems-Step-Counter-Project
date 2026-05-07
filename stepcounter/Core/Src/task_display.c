@@ -6,9 +6,9 @@
  * Date: 13/03/2026
  */
 
+#include "task_display.h"
 #include <stdio.h>
 #include <string.h>
-#include "task_display.h"
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 #include "ssd1306_conf.h"
@@ -18,10 +18,10 @@
 #define CM_PER_KM 100000
 #define YARDS_PER_KM 1094
 
-static char buffer[32];
 
 static void drawScreenHeader(const char* text)
 {
+	char buffer[32];
 	ssd1306_SetCursor(0, 0);
 	ssd1306_WriteString("-------------------", Font_7x10, White);
 
@@ -47,7 +47,7 @@ static void drawGoalCompleteScreen(void)
 
 static void displayCurrentSteps(void)
 {
-
+	char buffer[32];
 	drawScreenHeader("  Current Steps  ");
 	ssd1306_SetCursor(52, 40);
 
@@ -68,6 +68,7 @@ static void displayCurrentSteps(void)
 
 static void drawSetGoalState(void)
 {
+	char buffer[32];
 	ssd1306_SetCursor(0, 0);
 	ssd1306_WriteString("-----Set Goal-----", Font_7x10, White);
 
@@ -80,38 +81,36 @@ static void drawSetGoalState(void)
 
 static void displayGoalProgress(void)
 {
-
+	char buffer[32];
 	drawScreenHeader("  Goal Progress  ");
 	ssd1306_SetCursor(52, 40);
 
 	// scale progress to 0-9 for the progress bar
-	uint8_t goalProgressOutOfTen = ((float)steps / (float)stepGoal ) * 9;
+	uint8_t goalProgressOutOfTen = ((uint32_t)steps * 9) / stepGoal;
 	if (goalProgressOutOfTen >= 9)
 	{
 		goalProgressOutOfTen = 9;
 	}
 
 	// build progress bar string by filling '=' characters from left
-	char progressBarString[13] = "[         ]";
+	char progressBarString[] = "[         ]";
 	for (uint8_t i=0 ; i<goalProgressOutOfTen ; i++ )
 	{
 		progressBarString[i+1] = '=';
 	}
-	progressBarString[12] = '\0';
 
 	ssd1306_SetCursor(16, 32);
 	snprintf(buffer, sizeof(buffer), "%u / %u Steps", steps , stepGoal);
 	ssd1306_WriteString(buffer, Font_6x8, White);
 
 	ssd1306_SetCursor(3, 46);
-	snprintf(buffer, sizeof(buffer),  "%s", progressBarString);
-	ssd1306_WriteString(buffer, Font_11x18, White);
+	ssd1306_WriteString(progressBarString, Font_11x18, White);
 
 }
 
 static void displayDistanceTravelled(void)
 {
-
+	char buffer[32];
 	drawScreenHeader(" Distance Traveled ");
 
 	ssd1306_SetCursor(52, 40);
