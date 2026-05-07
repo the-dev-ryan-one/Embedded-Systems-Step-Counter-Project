@@ -11,4 +11,7 @@
 // updates OLED display
 void display_task_execute(void);
 
+// initialize oled screen
+void screenInit(void);
+
 #endif /* TASK_DISPLAY_H */

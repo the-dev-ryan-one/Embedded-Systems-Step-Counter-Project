@@ -7,13 +7,10 @@
 
 #include "app.h"
 #include "buttons.h"
-#include "imu_lsm6ds.h"
 #include "task_LED.h"
 #include "task_joystick.h"
 #include "task_button.h"
 #include "task_display.h"
-#include "ssd1306.h"
-#include "usart.h"
 #include "pwm.h"
 #include "task_stepcounter.h"
 #include "potentiometer.h"
@@ -79,7 +76,7 @@ void app_main(void) {
 	ProgressLEDsNextRun = HAL_GetTick() + PROGRESSLEDS_PERIOD_TICKS;
 
 	buttons_init();
-	ssd1306_Init();
+	screenInit();
 	initialisePWM();
 	initIMU();
 
@@ -90,33 +87,34 @@ void app_main(void) {
 
     	  if(ticks > DisplayNextRun)
 		  {
-    		 display_task_execute();
-    		 DisplayNextRun += DISPLAY_PERIOD_TICKS;
+			  display_task_execute();
+			  DisplayNextRun += DISPLAY_PERIOD_TICKS;
 		  }
 
     	  if(ticks > BlinkyNextRun)
     	  {
-    		blinky_task_execute();
-    		BlinkyNextRun += BLINKY_PERIOD_TICKS;
+			  blinky_task_execute();
+			  BlinkyNextRun += BLINKY_PERIOD_TICKS;
     	  }
 
     	  if (ticks > ButtonNextRun)
     	  {
-    		buttons_update();
-    		button_task_execute();
-    		ButtonNextRun += BUTTON_PERIOD_TICKS;
+    		  buttons_update();
+    		  button_task_execute();
+    		  ButtonNextRun += BUTTON_PERIOD_TICKS;
     	  }
 
     	  if (ticks > JoystickNextRun)
-			  {
-				joystick_task();
-				JoystickNextRun += JOYSTICK_PERIOD_TICKS;
-			  }
+		  {
+			  joystick_task();
+			  JoystickNextRun += JOYSTICK_PERIOD_TICKS;
+		  }
+
     	  if (ticks > PotentiometerNextRun)
-			  {
-    		  potentiometer_task();
-    		  PotentiometerNextRun += POTENTIOMETER_PERIOD_TICKS;
-			  }
+		  {
+			  potentiometer_task();
+			  PotentiometerNextRun += POTENTIOMETER_PERIOD_TICKS;
+		  }
 
     	  if (ticks > TestModeNextRun)
     	  {
@@ -135,8 +133,7 @@ void app_main(void) {
     	  {
     	      updateProgressLEDs();
     	      ProgressLEDsNextRun += PROGRESSLEDS_PERIOD_TICKS;
-
-    	}
+    	  }
 
     	}
 
